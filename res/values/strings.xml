@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">Shake-In</string>
+    <string name="app_id">541479822618673</string>
+    <string name="profile_pic">This is the user\'s profile picture</string>
+    <string name="enable_NFC">Enable NFC</string>
+    <string name="NFC_summary"> enables you to tag a friend using NFC</string>
+    <string name="enable_gestures">Enable gesture</string>
+    <string name="gesture_summary">shake phone to post a check-in to facebook</string>
+    <string name="addPlace">add place</string>
+</resources>
