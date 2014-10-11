@@ -17,7 +17,7 @@ public class Settings extends PreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// TODO : use something other than addPreferenceFromResource(....) 
+		// TODO : use something other than addPreferenceFromResource(....)
 		addPreferencesFromResource(R.xml.preferences);
 
 		SharedPreferences pref = PreferenceManager
@@ -36,13 +36,16 @@ public class Settings extends PreferenceActivity implements
 						.show();
 
 				startService(new Intent(this, Listener.class));
-			} else {
+			} else if (key.equals("NFC")) {
 				// kill the service
 				Toast.makeText(this, "killing the service", Toast.LENGTH_SHORT)
 						.show();
 
 				Intent intent = new Intent(this, Listener.class);
 				stopService(intent);
+			} else if (key.equals("message")) {
+				Toast.makeText(getBaseContext(), "message changed",
+						Toast.LENGTH_SHORT).show();
 			}
 
 		}

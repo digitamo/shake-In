@@ -8,4 +8,11 @@
     <string name="enable_gestures">Enable gesture</string>
     <string name="gesture_summary">shake phone to post a check-in to facebook</string>
     <string name="addPlace">add place</string>
-</resources>
+    <string name="default_message">Default message</string>
+    <string name="default_message_desc">change the default message in your post</string>
+    <string name="auto_login">Auto login</string>
+    <string name="auto_login_desc">login automatically when the app starts?</string>
+    <string name="login">login</string>
+    <string name="logout">logout</string>
+
+</resources>

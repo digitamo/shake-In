@@ -7,16 +7,21 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.HttpMethod;
@@ -30,10 +35,13 @@ import com.facebook.model.GraphObject;
 //	TODO: check if Google play services and facebook is installed on this device
 //  TODO: add <uses-feature > and the final key hash using the app-key element for publishing purposes
 //  TODO: save the user's profile picture locally.
+//	TODO: use fragment instead of activities.
+
 public class Main extends Activity {
-	private MainFragment mainFragment;
-	private ImageButton btnProfilePic;
 	private UiLifecycleHelper uiHelper;
+	private ImageView profilePic;
+	private ImageView login;
+	private boolean hasImage = false;
 	private Session.StatusCallback callBack = new Session.StatusCallback() {
 
 		@Override
@@ -53,46 +61,48 @@ public class Main extends Activity {
 
 		ActionBar actionbar = getActionBar();
 		actionbar.hide();
-		mainFragment = new MainFragment();
-		FragmentTransaction fragmentTransaction = getFragmentManager()
-				.beginTransaction();
-		fragmentTransaction.add(android.R.id.content, mainFragment).commit();
-		// TODO: use Session instead of authButton.
-		btnProfilePic = (ImageButton) findViewById(R.id.btnProfilePic);
 
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		profilePic = (ImageView) findViewById(R.id.profilePic);
+		login = (ImageView) findViewById(R.id.login);
+		profilePic.setVisibility(View.GONE);
+		login.setImageBitmap(getCircularBitmapII(BitmapFactory.decodeResource(
+				getResources(), R.drawable.login)));
+		login.setVisibility(View.VISIBLE);
+
+		if (autoLogin()) {
+			if (Session.getActiveSession().isClosed()) {
+				Session.openActiveSession(this, true, callBack);
+			}
+		}
 
 		if (serviceEnabled()) {
 			startService(new Intent(Main.this, Listener.class));
 			// the service is in a separate private process
 		}
-
-		setProfilePic();
 	}
 
-	@Override
-	public void onBackPressed() {
-		int count = getFragmentManager().getBackStackEntryCount();
-
-		if (count == 0) {
-			super.onBackPressed();
-			// additional code
-			FragmentTransaction fragmentTransaction = getFragmentManager()
-					.beginTransaction();
-			fragmentTransaction.add(android.R.id.content, mainFragment)
-					.commit();
-		} else {
-			getFragmentManager().popBackStack();
-			// mainFragment.onCreate(null);
-			// mainFragment.onCreateView(getLayoutInflater(), null, null);
-
-			// getFragmentManager().beginTransaction().remove(settingsFragment)
-			// .commit();
-			// getFragmentManager().popBackStack();
-			// getFragmentManager().beginTransaction().add(android.R.id.content,
-			// mainFragment);
-		}
+	private boolean autoLogin() {
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		return sharedPref.getBoolean("auto_login", true);
 	}
+
+	/*
+	 * @Override public void onBackPressed() { int count =
+	 * getFragmentManager().getBackStackEntryCount();
+	 * 
+	 * if (count == 0) { super.onBackPressed(); // additional code
+	 * FragmentTransaction fragmentTransaction = getFragmentManager()
+	 * .beginTransaction(); fragmentTransaction.add(android.R.id.content,
+	 * mainFragment) .commit(); } else { getFragmentManager().popBackStack(); //
+	 * mainFragment.onCreate(null); //
+	 * mainFragment.onCreateView(getLayoutInflater(), null, null);
+	 * 
+	 * // getFragmentManager().beginTransaction().remove(settingsFragment) //
+	 * .commit(); // getFragmentManager().popBackStack(); //
+	 * getFragmentManager().beginTransaction().add(android.R.id.content, //
+	 * mainFragment); } }
+	 */
 
 	@Override
 	public void onPause() {
@@ -104,6 +114,12 @@ public class Main extends Activity {
 	public void onResume() {
 		super.onResume();
 		uiHelper.onResume();
+		if (serviceEnabled()) {
+			startService(new Intent(Main.this, Listener.class));
+			// the service is in a separate private process
+		}
+
+		setProfilePic();
 	}
 
 	@Override
@@ -116,6 +132,10 @@ public class Main extends Activity {
 	public void onDestroy() {
 		super.onDestroy();
 		uiHelper.onDestroy();
+		if (serviceEnabled()) {
+			startService(new Intent(Main.this, Listener.class));
+			// the service is in a separate private process
+		}
 	}
 
 	@Override
@@ -144,10 +164,8 @@ public class Main extends Activity {
 	public void btnProfilePicOnClick(View view) {
 		if (Session.getActiveSession().isOpened()) {
 			Session.getActiveSession().close();
-			Toast.makeText(this, "logged out :(", Toast.LENGTH_SHORT).show();
 		} else {
 			Session.openActiveSession(this, true, callBack);
-			Toast.makeText(this, "logged In :D", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -158,79 +176,143 @@ public class Main extends Activity {
 
 	protected void onSessionStateChanged(Session session, SessionState state,
 			Exception exception) {
-		// TODO: make something due to the change of the session state.
-		if (session.isOpened()) {
-			Toast.makeText(this, "logged in", Toast.LENGTH_SHORT).show();
-		} else {
-			Toast.makeText(this, "logged out", Toast.LENGTH_SHORT).show();
+		if (state.isOpened()) {
+			Toast.makeText(this, "logged in :D", Toast.LENGTH_SHORT).show();
+			login.setVisibility(View.GONE);
+			setProfilePic();
+		} else if (state.isClosed()) {
+			Toast.makeText(this, "logged out :(", Toast.LENGTH_SHORT).show();
+			profilePic.setVisibility(View.GONE);
+			login.setVisibility(View.VISIBLE);
 		}
 	}
 
 	private void setProfilePic() {
-		Bundle params = new Bundle();
-		params.putString("fields", "picture");
+		if (profilePic.getVisibility() == View.VISIBLE) {
 
-		new Request(Session.getActiveSession(), "me", params, HttpMethod.GET,
-				new Request.Callback() {
+			if (!hasImage) {
 
-					@Override
-					public void onCompleted(Response response) {
-						GraphObject graphObject = response.getGraphObject();
-						if (graphObject != null) {
-							try {
-								JSONObject JObject = graphObject
-										.getInnerJSONObject();
-								JSONObject obj = JObject.getJSONObject(
-										"picture").getJSONObject("data");
-								final String StringUrl = obj.getString("url");
-								new Thread(new Runnable() {
+				Bundle params = new Bundle();
+				params.putString("fields", "picture");
 
-									@Override
-									public void run() {
-										try {
-											final Bitmap bitmap = BitmapFactory
-													.decodeStream(new java.net.URL(
-															StringUrl)
-															.openStream());
+				new Request(Session.getActiveSession(), "me", params,
+						HttpMethod.GET, new Request.Callback() {
 
-											Log.d("osama", "Image request sent");
+							@Override
+							public void onCompleted(Response response) {
+								GraphObject graphObject = response
+										.getGraphObject();
+								if (graphObject != null) {
+									try {
+										JSONObject JObject = graphObject
+												.getInnerJSONObject();
+										JSONObject obj = JObject.getJSONObject(
+												"picture")
+												.getJSONObject("data");
+										final String StringUrl = obj
+												.getString("url");
+										new Thread(new Runnable() {
 
-											/*
-											 * try { URL url = new
-											 * URL(StringUrl); HttpURLConnection
-											 * con = (HttpURLConnection)
-											 * url.openConnection(); InputStream
-											 * is = con.getInputStream(); final
-											 * Bitmap bitmap =
-											 * BitmapFactory.decodeStream(is); }
-											 * catch (Exception e) { }
-											 */
+											@Override
+											public void run() {
+												try {
+													final Bitmap bitmap = BitmapFactory
+															.decodeStream(new java.net.URL(
+																	StringUrl)
+																	.openStream());
 
-											runOnUiThread(new Runnable() {
+													Log.d("osama",
+															"Image request sent");
 
-												@Override
-												public void run() {
-													if (bitmap != null) {
-														btnProfilePic
-																.setImageBitmap(bitmap);
-													} else {
-														Log.e("osama",
-																"the image was null");
-													}
+													/*
+													 * try { URL url = new
+													 * URL(StringUrl);
+													 * HttpURLConnection con =
+													 * (HttpURLConnection)
+													 * url.openConnection();
+													 * InputStream is =
+													 * con.getInputStream();
+													 * final Bitmap bitmap =
+													 * BitmapFactory.
+													 * decodeStream(is); } catch
+													 * (Exception e) { }
+													 */
 
+													runOnUiThread(new Runnable() {
+
+														@Override
+														public void run() {
+															if (bitmap != null) {
+																profilePic
+																		.setImageBitmap(getCircularBitmapII(bitmap));
+																hasImage = true;
+															} else {
+																Log.e("osama",
+																		"the image was null");
+															}
+
+														}
+													});
+
+												} catch (IOException e) {
 												}
-											});
+											}
+										}).start();
+									} catch (JSONException ex) {
 
-										} catch (IOException e) {
-										}
 									}
-								}).start();
-							} catch (JSONException ex) {
 
+								}
 							}
-
-						}
-					}
-				}).executeAsync();
+						}).executeAsync();
+			}
+		} else if (profilePic.getVisibility() == View.GONE) {
+			profilePic.setVisibility(View.VISIBLE);
+		}
 	}
+
+	public static Bitmap getCircularBitmapII(Bitmap bitmap) {
+		Bitmap output;
+
+		if (bitmap.getWidth() > bitmap.getHeight()) {
+			output = Bitmap.createBitmap(bitmap.getHeight(),
+					bitmap.getHeight(), Config.ARGB_8888);
+		} else {
+			output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(),
+					Config.ARGB_8888);
+		}
+
+		Canvas canvas = new Canvas(output);
+
+		final int color = 0xff424242;
+		final Paint paint = new Paint();
+		final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+		float r = 0;
+
+		if (bitmap.getWidth() > bitmap.getHeight()) {
+			r = bitmap.getHeight() / 2;
+		} else {
+			r = bitmap.getWidth() / 2;
+		}
+
+		paint.setAntiAlias(true);
+		canvas.drawARGB(0, 0, 0, 0);
+		paint.setColor(color);
+		canvas.drawCircle(r, r, r, paint);
+		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+		canvas.drawBitmap(bitmap, rect, rect, paint);
+		return output;
+	}
+
+	/*
+	 * void getHasKey() { //Get Has Key try { PackageInfo info =
+	 * getPackageManager().getPackageInfo("com.osama.shake_in",
+	 * PackageManager.GET_SIGNATURES); for (Signature signature :
+	 * info.signatures) { MessageDigest md = MessageDigest.getInstance("SHA");
+	 * md.update(signature.toByteArray()); Log.e("KeyHash:",
+	 * Base64.encodeToString(md.digest(), Base64.DEFAULT)); } } catch
+	 * (NameNotFoundException e) { e.printStackTrace(); } catch (Exception e) {
+	 * e.printStackTrace(); } }
+	 */
 }
