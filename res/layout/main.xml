@@ -43,6 +43,7 @@
             android:id="@+id/settings"
             android:layout_width="50dip"
             android:layout_height="50dip"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:onClick="settingsOnClick"
@@ -58,6 +59,22 @@
         android:layout_gravity="center"
         android:onClick="onClickPost"
         android:text="Post"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="testShareDialogOnClick"
+        android:text="Test -ShareDialog-"
+        tools:ignore="HardcodedText" />
+    
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="testObjectAPIOnClick"
+        android:text="Test -ObjectAPI-"
         tools:ignore="HardcodedText" />
 
 </LinearLayout>

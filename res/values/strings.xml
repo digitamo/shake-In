@@ -14,5 +14,6 @@
     <string name="auto_login_desc">login automatically when the app starts?</string>
     <string name="login">login</string>
     <string name="logout">logout</string>
+    <string name="test">Test</string>
 
 </resources>

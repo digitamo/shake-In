@@ -119,7 +119,8 @@ public class Main extends Activity {
 			// the service is in a separate private process
 		}
 
-		setProfilePic();
+		if (Session.getActiveSession().isOpened())
+			setProfilePic();
 	}
 
 	@Override
@@ -304,6 +305,13 @@ public class Main extends Activity {
 		canvas.drawBitmap(bitmap, rect, rect, paint);
 		return output;
 	}
+
+	public void testShareDialogOnClick(View view) {
+		Intent intent = new Intent(this, Test.class);
+		startActivity(intent);
+	}
+	
+	
 
 	/*
 	 * void getHasKey() { //Get Has Key try { PackageInfo info =

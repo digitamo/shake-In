@@ -1615,7 +1615,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f020065;
         public static final int com_facebook_loginbutton_silver=0x7f020066;
         public static final int com_facebook_logo=0x7f020067;
-        public static final int com_facebook_picker_default_separator_color=0x7f0200a3;
+        public static final int com_facebook_picker_default_separator_color=0x7f0200a4;
         public static final int com_facebook_picker_item_background=0x7f020068;
         public static final int com_facebook_picker_list_focused=0x7f020069;
         public static final int com_facebook_picker_list_longpressed=0x7f02006a;
@@ -1671,10 +1671,11 @@ containing a value of this type.
         public static final int ic_plusone_small_off_client=0x7f02009c;
         public static final int ic_plusone_standard_off_client=0x7f02009d;
         public static final int ic_plusone_tall_off_client=0x7f02009e;
-        public static final int login=0x7f02009f;
-        public static final int powered_by_google_dark=0x7f0200a0;
-        public static final int powered_by_google_light=0x7f0200a1;
-        public static final int settings_gears=0x7f0200a2;
+        public static final int location_64x64=0x7f02009f;
+        public static final int login=0x7f0200a0;
+        public static final int powered_by_google_dark=0x7f0200a1;
+        public static final int powered_by_google_light=0x7f0200a2;
+        public static final int settings_gears=0x7f0200a3;
     }
     public static final class id {
         public static final int RelativeLayout1=0x7f06006a;
@@ -1785,6 +1786,7 @@ containing a value of this type.
         public static final int submit_area=0x7f06004d;
         public static final int tabMode=0x7f060002;
         public static final int terrain=0x7f06001b;
+        public static final int testText=0x7f060073;
         public static final int timer=0x7f060070;
         public static final int title=0x7f06003f;
         public static final int top_action_bar=0x7f060034;
@@ -1863,6 +1865,7 @@ containing a value of this type.
         public static final int post=0x7f030028;
         public static final int simple_list=0x7f030029;
         public static final int support_simple_spinner_dropdown_item=0x7f03002a;
+        public static final int test=0x7f03002b;
     }
     public static final class string {
         public static final int NFC_summary=0x7f0b0045;
@@ -2034,6 +2037,7 @@ containing a value of this type.
         public static final int login=0x7f0b004d;
         public static final int logout=0x7f0b004e;
         public static final int profile_pic=0x7f0b0043;
+        public static final int test=0x7f0b004f;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */
