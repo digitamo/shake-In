@@ -16,6 +16,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
+            <com.facebook.widget.LoginButton
+                android:id="@+id/authButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+
             <at.markushi.ui.CircleButton
                 android:id="@+id/btnProfilePic"
                 android:layout_width="64dip"
@@ -68,7 +74,7 @@
         android:onClick="testShareDialogOnClick"
         android:text="Test -ShareDialog-"
         tools:ignore="HardcodedText" />
-    
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
