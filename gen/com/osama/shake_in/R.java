@@ -1691,13 +1691,12 @@ containing a value of this type.
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060038;
         public static final int activity_chooser_view_content=0x7f060039;
-        public static final int addPlace=0x7f060073;
+        public static final int addPlace=0x7f060072;
         public static final int always=0x7f06000b;
-        public static final int authButton=0x7f06006b;
         public static final int beginning=0x7f060011;
         public static final int book_now=0x7f060028;
-        public static final int btnPost=0x7f060070;
-        public static final int btnProfilePic=0x7f06006c;
+        public static final int btnPost=0x7f06006f;
+        public static final int btnProfilePic=0x7f06006b;
         public static final int buyButton=0x7f060022;
         public static final int buy_now=0x7f060027;
         public static final int buy_with_google=0x7f060026;
@@ -1749,7 +1748,7 @@ containing a value of this type.
         public static final int large=0x7f06002d;
         public static final int listMode=0x7f060001;
         public static final int list_item=0x7f06003d;
-        public static final int login=0x7f06006d;
+        public static final int login=0x7f06006c;
         public static final int match_parent=0x7f060024;
         public static final int middle=0x7f060012;
         public static final int monochrome=0x7f06002b;
@@ -1758,8 +1757,8 @@ containing a value of this type.
         public static final int normal=0x7f060000;
         public static final int picker_subtitle=0x7f06005f;
         public static final int production=0x7f06001f;
-        public static final int profilePic=0x7f06006e;
-        public static final int progress=0x7f060072;
+        public static final int profilePic=0x7f06006d;
+        public static final int progress=0x7f060071;
         public static final int progress_circular=0x7f060018;
         public static final int progress_horizontal=0x7f060019;
         public static final int radio=0x7f060043;
@@ -1776,7 +1775,7 @@ containing a value of this type.
         public static final int search_src_text=0x7f06004b;
         public static final int search_voice_btn=0x7f06004f;
         public static final int selectionDetails=0x7f060023;
-        public static final int settings=0x7f06006f;
+        public static final int settings=0x7f06006e;
         public static final int shortcut=0x7f060042;
         public static final int showCustom=0x7f060007;
         public static final int showHome=0x7f060004;
@@ -1787,8 +1786,8 @@ containing a value of this type.
         public static final int submit_area=0x7f06004d;
         public static final int tabMode=0x7f060002;
         public static final int terrain=0x7f06001b;
-        public static final int testText=0x7f060074;
-        public static final int timer=0x7f060071;
+        public static final int testText=0x7f060073;
+        public static final int timer=0x7f060070;
         public static final int title=0x7f06003f;
         public static final int top_action_bar=0x7f060034;
         public static final int up=0x7f060035;

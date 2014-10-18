@@ -38,8 +38,10 @@ import com.facebook.widget.LoginButton;
 
 //	TODO: check if Google play services and facebook is installed on this device
 //  TODO: add <uses-feature > and the final key hash using the app-key element for publishing purposes
-//  TODO: save the user's profile picture locally.
+//  XXX: save the user's profile picture locally.  --> v.2
 //	TODO: use fragment instead of activities.
+
+//	FIXME: openSession vs  reverseSessionState!!!
 
 public class Main extends Activity {
 	private UiLifecycleHelper uiHelper;
@@ -77,7 +79,8 @@ public class Main extends Activity {
 		login.setVisibility(View.VISIBLE);
 
 		if (autoLogin()) {
-			openSession();
+			// openSession();
+			reverseSessionState();
 		}
 
 		if (serviceEnabled()) {
@@ -187,6 +190,30 @@ public class Main extends Activity {
 				Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
 						this, PERMISSIONS);
 				session.requestNewPublishPermissions(newPermissionsRequest);
+			}
+		}
+
+	}
+
+	private void reverseSessionState() {
+		Session session = Session.getActiveSession();
+
+		if (session != null) {
+			// check for permissions and set the permissions if missing
+			List<String> permissions = session.getPermissions();
+
+			final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+
+			if (!isSubsetOf(PERMISSIONS, permissions)) {
+				// authButton = (LoginButton) findViewById(R.id.authButton);
+				authButton = new LoginButton(this);
+				authButton.setPublishPermissions(Arrays
+						.asList("publish_actions"));
+				authButton.performClick();
+			} else if (session.isClosed()) {
+				Session.openActiveSession(this, true, callBack);
+			} else if (session.isOpened()) {
+				session.close();
 			}
 		}
 	}
@@ -325,11 +352,13 @@ public class Main extends Activity {
 	}
 
 	public void btnProfilePicOnClick(View view) {
-		if (Session.getActiveSession().isOpened()) {
-			Session.getActiveSession().close();
-		} else {
-			Session.openActiveSession(this, true, callBack);
-		}
+		// if (Session.getActiveSession().isOpened()) {
+		// Session.getActiveSession().close();
+		// } else {
+		// Session.openActiveSession(this, true, callBack);
+		// }
+
+		reverseSessionState();
 	}
 
 	public void settingsOnClick(View view) {
