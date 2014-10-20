@@ -1,5 +1,7 @@
 package com.osama.shake_in;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,10 +9,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
-import android.widget.Toast;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.util.Log;
+import android.widget.Toast;
 //import android.os.Handler;
 //import android.os.HandlerThread;
 //import android.os.Looper;
@@ -26,6 +28,7 @@ public class Listener extends Service implements SensorEventListener {
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
 	private static final int SHAKE_THRESHOLD = 70;
+	private static final int ONGOING_NOTIFICATION_ID = 39;
 
 	/*
 	 * public final class ServiceHandler extends Handler { public
@@ -45,6 +48,7 @@ public class Listener extends Service implements SensorEventListener {
 		//
 		// mServiceLooper = thread.getLooper();
 		// mServiceHandler = new ServiceHandler(mServiceLooper);
+		startForeground();
 
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		accelerometer = sensorManager
@@ -118,6 +122,31 @@ public class Listener extends Service implements SensorEventListener {
 				last_z = z;
 			}
 		}
+	}
+
+	private void startForeground() {
+		// // TODO: change the icons
+
+		// Notification notification = new Notification(R.drawable.ic_launcher,
+		// "shake-in running", System.currentTimeMillis());
+
+		Intent notificationIntent = new Intent(this, Main.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+				notificationIntent, 0);
+
+		Notification notification = new Notification.Builder(this)
+				.setContentTitle("shake-in")
+				.setContentText("I'm ready just shake-in")
+				.setContentIntent(pendingIntent)
+				.setSmallIcon(R.drawable.ic_launcher).setLargeIcon(null)
+				.setAutoCancel(true)
+				// .addAction(R.drawable.ic_launcher, "content I", pIntent)
+				// .addAction(R.drawable.ic_launcher, "content II", pIntent)
+				.build();
+
+		// notification.setLatestEventInfo(this, "shake-in",
+		// "I'm ready just shake-in", pendingIntent);
+		startForeground(ONGOING_NOTIFICATION_ID, notification);
 	}
 
 	public void vibrate(long timeInMillis) {

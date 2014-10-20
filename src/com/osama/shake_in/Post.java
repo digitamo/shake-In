@@ -17,8 +17,15 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +41,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphObject;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -44,8 +52,11 @@ import com.google.android.gms.location.LocationServices;
 
 public class Post extends ListActivity implements
 		GoogleApiClient.OnConnectionFailedListener,
-		GoogleApiClient.ConnectionCallbacks, LocationListener {
+		GoogleApiClient.ConnectionCallbacks, LocationListener,
+		CreateNdefMessageCallback, OnNdefPushCompleteCallback {
 	private LocationRequest locationRequest;
+	private String id;
+	private NfcAdapter nfcAdapter;
 	private GoogleApiClient googleApiClient;
 	private TextView countText;
 	private CountDownTimer counter;
@@ -95,40 +106,110 @@ public class Post extends ListActivity implements
 		googleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(LocationServices.API).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).build();
+
+		prepareNFC();
+
 		uiHelper = new UiLifecycleHelper(this, callBack);
 		uiHelper.onCreate(savedInstanceState);
 
 		progressBar = (ProgressBar) findViewById(R.id.progress);
 	}
 
-	private boolean isInternetActive() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-		return networkInfo != null && networkInfo.isConnectedOrConnecting();
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
 	}
 
-	private void buildAlertMessageNoGps() {
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(
-				"Your GPS seems to be disabled, do you want to enable it?")
-				.setCancelable(false)
-				.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							public void onClick(
-									final DialogInterface dialog,
-									final int id) {
-								startActivity(new Intent(
-										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-							}
-						})
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog,
-							final int id) {
-						dialog.cancel();
-					}
-				});
-		final AlertDialog alert = builder.create();
-		alert.show();
+	@Override
+	protected void onStart() {
+		super.onStart();
+		googleApiClient.connect();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		googleApiClient.disconnect();
+		uiHelper.onStop();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		Intent intent = getIntent();
+		if (intent != null) {
+			String action = intent.getAction();
+
+			if (action != null
+					&& action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
+				Log.d("osama", "started using NFC");
+
+				Parcelable[] parcelables = intent
+						.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+				NdefMessage inNdefMessage = (NdefMessage) parcelables[0];
+				NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
+				NdefRecord NdefRecord_0 = inNdefRecords[0];
+				String inMsg = new String(NdefRecord_0.getPayload());
+
+				Toast.makeText(this, "2nd user's Id is: " + inMsg,
+						Toast.LENGTH_LONG).show();
+			}
+		}
+		uiHelper.onResume();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		uiHelper.onDestroy();
+		if (googleApiClient.isConnected()) {
+			googleApiClient.disconnect();
+			googleApiClient.unregisterConnectionCallbacks(this);
+			googleApiClient.unregisterConnectionFailedListener(this);
+			LocationServices.FusedLocationApi.removeLocationUpdates(
+					googleApiClient, this);
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		uiHelper.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		uiHelper.onPause();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		uiHelper.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		// create a Location Request
+		locationRequest = LocationRequest.create()
+				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+				.setInterval(1000);
+
+		LocationServices.FusedLocationApi.requestLocationUpdates(
+				googleApiClient, locationRequest, this);
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		Log.e("osama", "connection Failed");
+	}
+
+	@Override
+	public void onConnectionSuspended(int cause) {
+		Log.i("osama", "Connection suspended");
 	}
 
 	@Override
@@ -137,35 +218,13 @@ public class Post extends ListActivity implements
 			Log.d("osama", "location is: " + location.getLatitude() + ", "
 					+ location.getLongitude());
 			locationDetected = true;
-			// TODO: how to detect that the user is logged out
-			// if (Session.getActiveSession().is) {
-			// // this didn't make a difference
-			// Toast.makeText(this, "you're logged out", Toast.LENGTH_SHORT)
-			// .show();
-			// }
 			if (Session.getActiveSession().isOpened()) {
 				// make a call to retrieve the page ID
 
-				/*
-				 * // I will use the PlacePickerFragment FragmentManager
-				 * fragmentManager = getSupportFragmentManager();
-				 * PlacePickerFragment placePickerFragment =
-				 * (PlacePickerFragment) fragmentManager
-				 * .findFragmentById(R.id.PlacePickerFragment); if
-				 * (placePickerFragment != null) {
-				 * placePickerFragment.setLocation(location);
-				 * placePickerFragment.setRadiusInMeters(100); }
-				 */
-
-				// the fql is not available at v2.1 :'(
+				// XXX: you could also use the placePickerFragment
+				// XXX: the fql is not available at v2.1 :'(
 
 				Bundle params = new Bundle();
-				// params.putString(
-				// "q",
-				// "SELECT page_id,latitude,longitude FROM place WHERE distance(latitude, longitude, "
-				// + location.getLatitude()
-				// + ", "
-				// + location.getLongitude() + ") < 250");
 				params.putString("type", "place");
 				params.putString(
 						"center",
@@ -173,15 +232,6 @@ public class Post extends ListActivity implements
 								+ String.valueOf(location.getLongitude())));
 				params.putString("distance", "100");
 
-				// Bundle params = new Bundle();
-				// params.putString("q", "ritual");
-				// params.putString("type", "place");
-				// params.putString("center", "37.76,-122.427");
-				// params.putString(
-				// "center",
-				// String.valueOf(location.getLatitude() + ", "
-				// + String.valueOf(location.getLongitude())));
-				// params.putString("distance", "100");
 				new Request(Session.getActiveSession(), "/search", params,
 						HttpMethod.GET, new Request.Callback() {
 
@@ -210,7 +260,7 @@ public class Post extends ListActivity implements
 
 												countText = (TextView) findViewById(R.id.timer);
 												counter = new CountDownTimer(
-														9000, 1000) {
+														10000, 1000) {
 
 													@Override
 													public void onTick(
@@ -259,7 +309,6 @@ public class Post extends ListActivity implements
 			} else {
 				Log.e("osama", "you don't have an open session!!");
 
-				// TODO: display a warning dialog to login and exit
 				new AlertDialog.Builder(this).setTitle("Warning")
 						.setMessage("please login with facebook")
 						.setPositiveButton("login", new OnClickListener() {
@@ -269,8 +318,6 @@ public class Post extends ListActivity implements
 									int which) {
 								Intent intent = new Intent(getBaseContext(),
 										Main.class);
-								// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-								// | Intent.FLAG_ACTIVITY_NEW_TASK);
 								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 								startActivity(intent);
 
@@ -284,97 +331,34 @@ public class Post extends ListActivity implements
 							}
 						}).setIcon(R.drawable.error).show();
 			}
-		} else {
-			// googleApiClient.disconnect();
-			// googleApiClient.unregisterConnectionCallbacks(this);
-			// googleApiClient.unregisterConnectionFailedListener(this);
-			// LocationServices.FusedLocationApi.removeLocationUpdates(
-			// googleApiClient, this);
 		}
 
 	}
 
 	@Override
-	public void onConnected(Bundle connectionHint) {
-		// create a Location Request
-		locationRequest = LocationRequest.create()
-				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-				.setInterval(1000);
+	public void onNdefPushComplete(NfcEvent event) {
+		final String eventString = "onNdefPushComplete\n" + event.toString();
+		runOnUiThread(new Runnable() {
 
-		LocationServices.FusedLocationApi.requestLocationUpdates(
-				googleApiClient, locationRequest, this);
+			@Override
+			public void run() {
+				Toast.makeText(getApplicationContext(), "onNdefPushComplete",
+						Toast.LENGTH_LONG).show();
+
+				Toast.makeText(getApplicationContext(), eventString,
+						Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 	@Override
-	public void onConnectionSuspended(int cause) {
-		Log.i("osama", "Connection suspended");
-	}
+	public NdefMessage createNdefMessage(NfcEvent event) {
+		// TODO: try to decrease the API level
 
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		Log.e("osama", "connection Failed");
-	}
+		NdefRecord rtdUriRecord = NdefRecord.createUri("id:" + getUserId());
 
-	protected void onSessionStateChange(Session session, SessionState state,
-			Exception exception) {
-		if (state.isOpened()) {
-			Toast.makeText(getBaseContext(), "logged in :)", Toast.LENGTH_SHORT)
-					.show();
-		} else {
-			Toast.makeText(getBaseContext(), "you're logged out :(",
-					Toast.LENGTH_SHORT).show();
-		}
-
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		googleApiClient.connect();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		googleApiClient.disconnect();
-		uiHelper.onStop();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		uiHelper.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		uiHelper.onDestroy();
-		if (googleApiClient.isConnected()) {
-			googleApiClient.disconnect();
-			googleApiClient.unregisterConnectionCallbacks(this);
-			googleApiClient.unregisterConnectionFailedListener(this);
-			LocationServices.FusedLocationApi.removeLocationUpdates(
-					googleApiClient, this);
-		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		uiHelper.onSaveInstanceState(outState);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		uiHelper.onPause();
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		uiHelper.onActivityResult(requestCode, resultCode, data);
+		NdefMessage ndefMessageout = new NdefMessage(rtdUriRecord);
+		return ndefMessageout;
 	}
 
 	@Override
@@ -400,6 +384,104 @@ public class Post extends ListActivity implements
 		}
 	}
 
+	protected void onSessionStateChange(Session session, SessionState state,
+			Exception exception) {
+		if (state.isOpened()) {
+			Toast.makeText(getBaseContext(), "logged in :)", Toast.LENGTH_SHORT)
+					.show();
+		} else {
+			Toast.makeText(getBaseContext(), "you're logged out :(",
+					Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
+	private boolean isInternetActive() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+		return networkInfo != null && networkInfo.isConnectedOrConnecting();
+	}
+
+	private void prepareNFC() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		boolean nfcEnabled = sharedPreferences.getBoolean("NFC", true);
+
+		if (nfcEnabled) {
+			nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+			if (nfcAdapter == null) {
+				// TODO: try to enable NFC!!
+
+				Toast.makeText(getApplicationContext(),
+						"nfcAdapter==null, no NFC adapter exists",
+						Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(getApplicationContext(), "Set Callback(s)",
+						Toast.LENGTH_LONG).show();
+				nfcAdapter.setNdefPushMessageCallback(this, this);
+				nfcAdapter.setOnNdefPushCompleteCallback(this, this);
+			}
+		}
+	}
+
+	private void buildAlertMessageNoGps() {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(
+				"Your GPS seems to be disabled, do you want to enable it?")
+				.setCancelable(false)
+				.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(final DialogInterface dialog,
+									final int id) {
+								startActivity(new Intent(
+										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+							}
+						})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog,
+							final int id) {
+						dialog.cancel();
+					}
+				});
+		final AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private String getUserId() {
+		Session session = Session.getActiveSession();
+		if (session != null && session.isOpened()) {
+			// send a request to get the user id
+
+			new Request(session, "/me", null, HttpMethod.GET,
+					new Request.Callback() {
+
+						@Override
+						public void onCompleted(Response response) {
+							final GraphObject graphObject = response
+									.getGraphObject();
+							if (graphObject != null) {
+
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										id = (String) graphObject
+												.getProperty("id");
+									}
+								});
+							}
+						}
+					}).executeAndWait();
+		}
+
+		return id;
+	}
+
+	/**
+	 * @author osama </br> this method is used to post a check-in
+	 * 
+	 * @param placeId
+	 */
 	private void post(String placeId) {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
@@ -408,6 +490,35 @@ public class Post extends ListActivity implements
 		Bundle params = new Bundle();
 		params.putString("message", message);
 		params.putString("place", placeId);
+
+		new Request(Session.getActiveSession(), "/me/feed", params,
+				HttpMethod.POST, new Request.Callback() {
+
+					@Override
+					public void onCompleted(Response response) {
+						Log.d("osama",
+								"the post response was: " + response.toString());
+					}
+				}).executeAsync();
+	}
+
+	/**
+	 * @author osama </br> use this method to post a check-in with a friend
+	 * @param placeId
+	 * @param friendId
+	 */
+	private void post(String placeId, String friendId) {
+		// TODO: support multiple tags by providing a comma-separated id
+
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		String message = sharedPreferences.getString("message",
+				"I was there :)");
+
+		Bundle params = new Bundle();
+		params.putString("message", message);
+		params.putString("place", placeId);
+		params.putString("tags", friendId);
 
 		new Request(Session.getActiveSession(), "/me/feed", params,
 				HttpMethod.POST, new Request.Callback() {
