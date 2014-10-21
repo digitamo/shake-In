@@ -38,6 +38,6 @@
             android:onClick="addPlaceOnClick"
             android:src="@drawable/add_location"
             app:cb_color="#ffffff"
-            app:cb_pressedRingWidth="100dip" />
+            app:cb_pressedRingWidth="15dip" />
 
 </LinearLayout>

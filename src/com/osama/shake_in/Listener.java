@@ -27,7 +27,7 @@ public class Listener extends Service implements SensorEventListener {
 	private Sensor accelerometer;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
-	private static final int SHAKE_THRESHOLD = 70;
+	private static final int SHAKE_THRESHOLD = 50;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
 
 	/*

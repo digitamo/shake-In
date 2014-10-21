@@ -30,6 +30,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,6 +43,9 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
+import com.facebook.model.OpenGraphAction;
+import com.facebook.model.OpenGraphObject;
+import com.facebook.widget.FacebookDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -61,6 +65,7 @@ public class Post extends ListActivity implements
 	private TextView countText;
 	private CountDownTimer counter;
 	private boolean locationDetected;
+	private Location location;
 	private ProgressBar progressBar;
 	private UiLifecycleHelper uiHelper;
 	private JSONArray data;
@@ -188,7 +193,32 @@ public class Post extends ListActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		uiHelper.onActivityResult(requestCode, resultCode, data);
+		// handle the share dialog result here
+		uiHelper.onActivityResult(requestCode, resultCode, data,
+				new FacebookDialog.Callback() {
+					// XXX:you can handle the shareDialog response here
+					@Override
+					public void onError(FacebookDialog.PendingCall pendingCall,
+							Exception error, Bundle data) {
+						Log.e("Post",
+								String.format("Error: %s", error.toString()));
+					}
+
+					@Override
+					public void onComplete(
+							FacebookDialog.PendingCall pendingCall, Bundle data) {
+						Toast.makeText(
+								getBaseContext(),
+								String.valueOf(FacebookDialog
+										.getNativeDialogDidComplete(data)),
+								Toast.LENGTH_SHORT).show();
+
+						Log.i("Activity", "Success!");
+						// XXX: open the session
+						finish();
+
+					}
+				});
 	}
 
 	@Override
@@ -218,6 +248,7 @@ public class Post extends ListActivity implements
 			Log.d("osama", "location is: " + location.getLatitude() + ", "
 					+ location.getLongitude());
 			locationDetected = true;
+			this.location = location;
 			if (Session.getActiveSession().isOpened()) {
 				// make a call to retrieve the page ID
 
@@ -355,7 +386,10 @@ public class Post extends ListActivity implements
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		// TODO: try to decrease the API level
 
-		NdefRecord rtdUriRecord = NdefRecord.createUri("id:" + getUserId());
+		String userId = getUserId();
+		Toast.makeText(getApplicationContext(), "your id is: " + userId,
+				Toast.LENGTH_SHORT).show();
+		NdefRecord rtdUriRecord = NdefRecord.createUri("id://" + userId);
 
 		NdefMessage ndefMessageout = new NdefMessage(rtdUriRecord);
 		return ndefMessageout;
@@ -548,6 +582,94 @@ public class Post extends ListActivity implements
 		} else {
 			Log.e("osama", "the data or JSONdata was null!!");
 		}
+	}
+
+	protected void displayShareDialogIII(String placeName) {
+		// this one uses the user owned objects and the user is capable of
+		// creating objects
+
+		// only show the share dialog if the user has the app installed
+		if (FacebookDialog.canPresentOpenGraphActionDialog(
+				getApplicationContext(),
+				FacebookDialog.OpenGraphActionDialogFeature.OG_ACTION_DIALOG)) {
+
+			// you need to close the session first.
+			if (Session.getActiveSession().isOpened()) {
+				// Session.getActiveSession().closeAndClearTokenInformation();
+				Session.getActiveSession().close();
+			}
+
+			// OpenGraphObject some_where = OpenGraphObject.Factory
+			// .createForPost("shake-in:some_where");
+			OpenGraphObject some_where = OpenGraphObject.Factory
+					.createForPost("shake-in:some_where");
+			some_where.setProperty("title", placeName);
+			some_where.setProperty("image",
+					"http://shake-in.parseapp.com/location.png");
+			some_where.setProperty("url", null);
+			if (locationDetected) {
+				some_where.getData().setProperty("place:location:latitude",
+						location.getLatitude());
+				some_where.getData().setProperty("place:location:longitude",
+						location.getLongitude());
+			}
+			// TODO: add description
+			// some_where.setProperty("description", "finally it runs");
+
+			OpenGraphAction action = GraphObject.Factory
+					.create(OpenGraphAction.class);
+			action.setProperty("some_where", some_where);
+
+			@SuppressWarnings("deprecation")
+			FacebookDialog shareDialog = new FacebookDialog.OpenGraphActionDialogBuilder(
+					this, action, "shake-in:visit", "some_where").build();
+			uiHelper.trackPendingDialogCall(shareDialog.present());
+		}
+	}
+
+	public void addPlaceOnClick(View view) {
+		// cancel the counter
+		if (counter != null) {
+			counter.cancel();
+		}
+
+		// Display a dialog to get the place name from user.
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		alert.setTitle("New place");
+		alert.setMessage("Where are you?");
+
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		alert.setView(input);
+
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						String placeName = input.getText().toString();
+
+						// show the shared-Dialog
+						displayShareDialogIII(placeName);
+					}
+
+					// TODO: use a handler to call the method
+				});
+			}
+		});
+
+		alert.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Canceled.
+					}
+				});
+
+		alert.show();
+
 	}
 
 }
