@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -136,10 +137,12 @@ public class Listener extends Service implements SensorEventListener {
 
 		Notification notification = new Notification.Builder(this)
 				.setContentTitle("shake-in")
-				.setContentText("I'm ready just shake-in")
+				.setContentText("I'm ready to shake-in :D")
 				.setContentIntent(pendingIntent)
-				.setSmallIcon(R.drawable.ic_launcher).setLargeIcon(null)
-				.setAutoCancel(true)
+				.setSmallIcon(R.drawable.location_64x64_white)
+				.setLargeIcon(
+						BitmapFactory.decodeResource(getResources(),
+								R.drawable.shake_in)).setAutoCancel(true)
 				// .addAction(R.drawable.ic_launcher, "content I", pIntent)
 				// .addAction(R.drawable.ic_launcher, "content II", pIntent)
 				.build();

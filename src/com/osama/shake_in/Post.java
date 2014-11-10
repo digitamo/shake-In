@@ -605,7 +605,7 @@ public class Post extends ListActivity implements
 					.createForPost("shake-in:some_where");
 			some_where.setProperty("title", placeName);
 			some_where.setProperty("image",
-					"http://shake-in.parseapp.com/location.png");
+					"http://shake-in.parseapp.com/shakeIn.png");
 			some_where.setProperty("url", null);
 			if (locationDetected) {
 				some_where.getData().setProperty("place:location:latitude",

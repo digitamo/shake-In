@@ -1,6 +1,7 @@
 package com.osama.shake_in;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -22,8 +27,12 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -78,7 +87,12 @@ public class Main extends Activity {
 				getResources(), R.drawable.login)));
 		login.setVisibility(View.VISIBLE);
 
-		if (autoLogin()) {
+		ImageButton btnPost = (ImageButton) findViewById(R.id.btnPost);
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.wiggle);
+		btnPost.startAnimation(anim);
+
+		// XXX: edited check if it's valid
+		if (autoLogin() && Session.getActiveSession().getState().isClosed()) {
 			// openSession();
 			reverseSessionState();
 		}
@@ -346,6 +360,10 @@ public class Main extends Activity {
 		startActivity(intent);
 	}
 
+	public void settingsOnClick(View view) {
+		startActivity(new Intent(this, Settings.class));
+	}
+
 	public void onClickPost(View view) {
 		Intent intent = new Intent(this, Post.class);
 		startActivity(intent);
@@ -361,24 +379,26 @@ public class Main extends Activity {
 		reverseSessionState();
 	}
 
-	public void settingsOnClick(View view) {
-		startActivity(new Intent(this, Settings.class));
-	}
-
 	public void testObjectAPIOnClick(View view) {
 		startActivity(new Intent(this, TestII.class));
 	}
 
-	/*
-	 * void getHasKey() { //Get Has Key try { PackageInfo info =
-	 * getPackageManager().getPackageInfo("com.osama.shake_in",
-	 * PackageManager.GET_SIGNATURES); for (Signature signature :
-	 * info.signatures) { MessageDigest md = MessageDigest.getInstance("SHA");
-	 * md.update(signature.toByteArray()); Log.e("KeyHash:",
-	 * Base64.encodeToString(md.digest(), Base64.DEFAULT)); } } catch
-	 * (NameNotFoundException e) { e.printStackTrace(); } catch (Exception e) {
-	 * e.printStackTrace(); } }
-	 */
+	// void getHasKey() { // Get Has Key
+	// try {
+	// PackageInfo info = getPackageManager().getPackageInfo(
+	// "com.osama.shake_in", PackageManager.GET_SIGNATURES);
+	// for (Signature signature : info.signatures) {
+	// MessageDigest md = MessageDigest.getInstance("SHA");
+	// md.update(signature.toByteArray());
+	// Log.e("KeyHash:",
+	// Base64.encodeToString(md.digest(), Base64.DEFAULT));
+	// }
+	// } catch (NameNotFoundException e) {
+	// e.printStackTrace();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	/*
 	 * @Override public void onBackPressed() { int count =
