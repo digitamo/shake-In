@@ -349,7 +349,7 @@ int drawable com_facebook_list_divider 0x7f020064
 int drawable com_facebook_list_section_header_background 0x7f020065
 int drawable com_facebook_loginbutton_silver 0x7f020066
 int drawable com_facebook_logo 0x7f020067
-int drawable com_facebook_picker_default_separator_color 0x7f0200a4
+int drawable com_facebook_picker_default_separator_color 0x7f0200a6
 int drawable com_facebook_picker_item_background 0x7f020068
 int drawable com_facebook_picker_list_focused 0x7f020069
 int drawable com_facebook_picker_list_longpressed 0x7f02006a
@@ -407,9 +407,11 @@ int drawable ic_plusone_standard_off_client 0x7f02009d
 int drawable ic_plusone_tall_off_client 0x7f02009e
 int drawable location_64x64 0x7f02009f
 int drawable login 0x7f0200a0
-int drawable powered_by_google_dark 0x7f0200a1
-int drawable powered_by_google_light 0x7f0200a2
-int drawable settings_gears 0x7f0200a3
+int drawable pin 0x7f0200a1
+int drawable powered_by_google_dark 0x7f0200a2
+int drawable powered_by_google_light 0x7f0200a3
+int drawable settings_gears 0x7f0200a4
+int drawable shake_in 0x7f0200a5
 int id RelativeLayout1 0x7f06006a
 int id action_bar 0x7f060030
 int id action_bar_activity_content 0x7f060015
