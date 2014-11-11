@@ -1,43 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:text="--:--"
-        android:textSize="20sp"
-        tools:ignore="HardcodedText" />
+    <at.markushi.ui.CircleButton
+        android:id="@+id/addPlace"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="addPlaceOnClick"
+        android:src="@drawable/pin_add"
+        app:cb_color="#ffffff"
+        app:cb_pressedRingWidth="15dip" />
 
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="34dp"
         android:layout_height="34dp"
-        android:layout_gravity="center" />
+        android:layout_below="@+id/timer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:gravity="center_horizontal"
+        android:text="--:--"
+        android:textSize="20sp"
+        tools:ignore="HardcodedText" />
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1.33"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addPlace"
+        android:layout_below="@+id/timer"
+        android:layout_centerHorizontal="true"
         android:visibility="invisible" >
+
     </ListView>
 
-        <at.markushi.ui.CircleButton
-            android:id="@+id/addPlace"
-            android:layout_width="50dip"
-            android:layout_height="50dip"
-            android:layout_gravity="center"
-            android:onClick="addPlaceOnClick"
-            android:src="@drawable/add_location"
-            app:cb_color="#ffffff"
-            app:cb_pressedRingWidth="15dip" />
+    <!-- <ListView -->
+    <!-- android:id="@android:id/list" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="0dp" -->
+    <!-- android:layout_above="@+id/addPlace" -->
+    <!-- android:layout_alignTop="@+id/progress" -->
+    <!-- android:layout_centerHorizontal="true" -->
+    <!-- android:visibility="invisible" /> -->
 
-</LinearLayout>
+</RelativeLayout>

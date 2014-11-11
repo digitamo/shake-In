@@ -8,7 +8,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-// TODO: use fragment instead of activity.
 public class Settings extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
@@ -17,7 +16,7 @@ public class Settings extends PreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// TODO : use something other than addPreferenceFromResource(....)
+		// TODO : use fragment instead
 		addPreferencesFromResource(R.xml.preferences);
 
 		SharedPreferences pref = PreferenceManager

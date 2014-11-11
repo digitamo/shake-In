@@ -613,7 +613,6 @@ public class Post extends ListActivity implements
 				some_where.getData().setProperty("place:location:longitude",
 						location.getLongitude());
 			}
-			// TODO: add description
 			// some_where.setProperty("description", "finally it runs");
 
 			OpenGraphAction action = GraphObject.Factory

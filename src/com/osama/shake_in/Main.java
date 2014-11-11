@@ -1,7 +1,6 @@
 package com.osama.shake_in;
 
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -13,10 +12,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -27,7 +22,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -45,7 +39,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.widget.LoginButton;
 
-//	TODO: check if Google play services and facebook is installed on this device
+//	TODO: check if Google play services and facebook are installed on this device
 //  TODO: add <uses-feature > and the final key hash using the app-key element for publishing purposes
 //  XXX: save the user's profile picture locally.  --> v.2
 //	TODO: use fragment instead of activities.
@@ -92,9 +86,11 @@ public class Main extends Activity {
 		btnPost.startAnimation(anim);
 
 		// XXX: edited check if it's valid
+		// FIXME: logs in automatically no matter what!!
 		if (autoLogin() && Session.getActiveSession().getState().isClosed()) {
 			// openSession();
 			reverseSessionState();
+			Log.d("osama", "auto login = true");
 		}
 
 		if (serviceEnabled()) {
@@ -355,11 +351,6 @@ public class Main extends Activity {
 		return output;
 	}
 
-	public void testShareDialogOnClick(View view) {
-		Intent intent = new Intent(this, Test.class);
-		startActivity(intent);
-	}
-
 	public void settingsOnClick(View view) {
 		startActivity(new Intent(this, Settings.class));
 	}
@@ -382,6 +373,11 @@ public class Main extends Activity {
 	public void testObjectAPIOnClick(View view) {
 		startActivity(new Intent(this, TestII.class));
 	}
+
+	// public void testShareDialogOnClick(View view) {
+	// Intent intent = new Intent(this, Test.class);
+	// startActivity(intent);
+	// }
 
 	// void getHasKey() { // Get Has Key
 	// try {

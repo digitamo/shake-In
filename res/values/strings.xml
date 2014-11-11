@@ -15,5 +15,6 @@
     <string name="login">login</string>
     <string name="logout">logout</string>
     <string name="test">Test</string>
+    <string name="post_desc">click here to detect your location and post post</string>
 
 </resources>

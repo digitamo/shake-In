@@ -28,7 +28,7 @@ public class Listener extends Service implements SensorEventListener {
 	private Sensor accelerometer;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
-	private static final int SHAKE_THRESHOLD = 50;
+	private static final int SHAKE_THRESHOLD = 93;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
 
 	/*
@@ -126,7 +126,6 @@ public class Listener extends Service implements SensorEventListener {
 	}
 
 	private void startForeground() {
-		// // TODO: change the icons
 
 		// Notification notification = new Notification(R.drawable.ic_launcher,
 		// "shake-in running", System.currentTimeMillis());

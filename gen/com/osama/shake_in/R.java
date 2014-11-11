@@ -15,6 +15,7 @@ public final class R {
         public static final int abc_slide_in_top=0x7f040003;
         public static final int abc_slide_out_bottom=0x7f040004;
         public static final int abc_slide_out_top=0x7f040005;
+        public static final int wiggle=0x7f040006;
     }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
@@ -1615,7 +1616,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f020065;
         public static final int com_facebook_loginbutton_silver=0x7f020066;
         public static final int com_facebook_logo=0x7f020067;
-        public static final int com_facebook_picker_default_separator_color=0x7f0200a6;
+        public static final int com_facebook_picker_default_separator_color=0x7f0200a7;
         public static final int com_facebook_picker_item_background=0x7f020068;
         public static final int com_facebook_picker_list_focused=0x7f020069;
         public static final int com_facebook_picker_list_longpressed=0x7f02006a;
@@ -1666,18 +1667,19 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_light=0x7f020097;
         public static final int edit_text=0x7f020098;
         public static final int error=0x7f020099;
-        public static final int ic_launcher=0x7f02009a;
-        public static final int ic_plusone_medium_off_client=0x7f02009b;
-        public static final int ic_plusone_small_off_client=0x7f02009c;
-        public static final int ic_plusone_standard_off_client=0x7f02009d;
-        public static final int ic_plusone_tall_off_client=0x7f02009e;
-        public static final int location_64x64=0x7f02009f;
+        public static final int ic_plusone_medium_off_client=0x7f02009a;
+        public static final int ic_plusone_small_off_client=0x7f02009b;
+        public static final int ic_plusone_standard_off_client=0x7f02009c;
+        public static final int ic_plusone_tall_off_client=0x7f02009d;
+        public static final int location_64x64=0x7f02009e;
+        public static final int location_64x64_white=0x7f02009f;
         public static final int login=0x7f0200a0;
         public static final int pin=0x7f0200a1;
-        public static final int powered_by_google_dark=0x7f0200a2;
-        public static final int powered_by_google_light=0x7f0200a3;
-        public static final int settings_gears=0x7f0200a4;
-        public static final int shake_in=0x7f0200a5;
+        public static final int pin_add=0x7f0200a2;
+        public static final int powered_by_google_dark=0x7f0200a3;
+        public static final int powered_by_google_light=0x7f0200a4;
+        public static final int settings_gears=0x7f0200a5;
+        public static final int shake_in=0x7f0200a6;
     }
     public static final class id {
         public static final int RelativeLayout1=0x7f06006a;
@@ -1693,7 +1695,7 @@ containing a value of this type.
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060038;
         public static final int activity_chooser_view_content=0x7f060039;
-        public static final int addPlace=0x7f060072;
+        public static final int addPlace=0x7f060070;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
         public static final int book_now=0x7f060028;
@@ -1789,7 +1791,7 @@ containing a value of this type.
         public static final int tabMode=0x7f060002;
         public static final int terrain=0x7f06001b;
         public static final int testText=0x7f060073;
-        public static final int timer=0x7f060070;
+        public static final int timer=0x7f060072;
         public static final int title=0x7f06003f;
         public static final int top_action_bar=0x7f060034;
         public static final int up=0x7f060035;
@@ -2039,6 +2041,7 @@ containing a value of this type.
         public static final int gesture_summary=0x7f0b0047;
         public static final int login=0x7f0b004d;
         public static final int logout=0x7f0b004e;
+        public static final int post_desc=0x7f0b0050;
         public static final int profile_pic=0x7f0b0043;
         public static final int test=0x7f0b004f;
         /**  Text on a placeholder buy button when Google Play services is not
