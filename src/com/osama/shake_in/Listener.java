@@ -124,13 +124,14 @@ public class Listener extends Service implements SensorEventListener {
 			}
 		}
 	}
+	
 
 	private void startForeground() {
 
 		// Notification notification = new Notification(R.drawable.ic_launcher,
 		// "shake-in running", System.currentTimeMillis());
 
-		Intent notificationIntent = new Intent(this, Main.class);
+		Intent notificationIntent = new Intent(this, Main.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
 

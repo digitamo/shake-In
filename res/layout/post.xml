@@ -25,17 +25,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
 
-    <TextView
-        android:id="@+id/timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:gravity="center_horizontal"
-        android:text="--:--"
-        android:textSize="20sp"
-        tools:ignore="HardcodedText" />
+<!--     <TextView -->
+<!--         android:id="@+id/timer" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignParentTop="true" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_marginTop="21dp" -->
+<!--         android:gravity="center_horizontal" -->
+<!--         android:text="00:00" -->
+<!--         android:textSize="20sp" -->
+<!--         tools:ignore="HardcodedText" /> -->
 
     <ListView
         android:id="@android:id/list"
@@ -45,7 +45,6 @@
         android:layout_below="@+id/timer"
         android:layout_centerHorizontal="true"
         android:visibility="invisible" >
-
     </ListView>
 
     <!-- <ListView -->

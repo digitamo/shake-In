@@ -43,6 +43,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
+import com.facebook.model.GraphUser;
 import com.facebook.model.OpenGraphAction;
 import com.facebook.model.OpenGraphObject;
 import com.facebook.widget.FacebookDialog;
@@ -60,10 +61,11 @@ public class Post extends ListActivity implements
 		CreateNdefMessageCallback, OnNdefPushCompleteCallback {
 	private LocationRequest locationRequest;
 	private String id;
+	private String friendId;
 	private NfcAdapter nfcAdapter;
 	private GoogleApiClient googleApiClient;
-	private TextView countText;
-	private CountDownTimer counter;
+	// private TextView countText;
+	// private CountDownTimer counter;
 	private boolean locationDetected;
 	private Location location;
 	private ProgressBar progressBar;
@@ -88,8 +90,6 @@ public class Post extends ListActivity implements
 
 		// checking for Internet connection.
 		if (!isInternetActive()) {
-			// TODO: run this dialog separately or stop the activity life cycle
-			// or unregister listeners when this dialog is shown
 			new AlertDialog.Builder(this).setTitle("Warning!")
 					.setMessage("you don't have Internet Connrectivity :(")
 					.setPositiveButton("Ok", new OnClickListener() {
@@ -112,6 +112,8 @@ public class Post extends ListActivity implements
 				.addApi(LocationServices.API).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).build();
 
+		setUserId();
+
 		prepareNFC();
 
 		uiHelper = new UiLifecycleHelper(this, callBack);
@@ -122,7 +124,7 @@ public class Post extends ListActivity implements
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
+		// super.onNewIntent(intent);
 		setIntent(intent);
 	}
 
@@ -144,24 +146,20 @@ public class Post extends ListActivity implements
 		super.onResume();
 
 		Intent intent = getIntent();
-		if (intent != null) {
-			String action = intent.getAction();
-
-			if (action != null
-					&& action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
-				Log.d("osama", "started using NFC");
-
+		String action = intent.getAction();
+		if (action != null) {
+			if (action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
 				Parcelable[] parcelables = intent
 						.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 				NdefMessage inNdefMessage = (NdefMessage) parcelables[0];
 				NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
 				NdefRecord NdefRecord_0 = inNdefRecords[0];
-				String inMsg = new String(NdefRecord_0.getPayload());
-
-				Toast.makeText(this, "2nd user's Id is: " + inMsg,
-						Toast.LENGTH_LONG).show();
+				friendId = new String(NdefRecord_0.getPayload());
 			}
+		} else {
+			Log.d("osama", "the intent is not from the NFC!!");
 		}
+
 		uiHelper.onResume();
 	}
 
@@ -276,6 +274,7 @@ public class Post extends ListActivity implements
 									try {
 										final JSONArray JSONdata = result
 												.getJSONArray("data");
+										Log.d("osama", JSONdata.toString(1));
 
 										runOnUiThread(new Runnable() {
 
@@ -289,41 +288,41 @@ public class Post extends ListActivity implements
 												getListView().setVisibility(
 														View.VISIBLE);
 
-												countText = (TextView) findViewById(R.id.timer);
-												counter = new CountDownTimer(
-														10000, 1000) {
-
-													@Override
-													public void onTick(
-															long millisUntilFinished) {
-														countText
-																.setText("00:"
-																		+ millisUntilFinished
-																		/ 1000);
-													}
-
-													@Override
-													public void onFinish() {
-														if (data != null) {
-															try {
-																String placeId = data
-																		.getJSONObject(
-																				0)
-																		.getString(
-																				"id");
-																post(placeId);
-																countText
-																		.setText("--:--");
-																counter.cancel();
-																finish();
-															} catch (JSONException e) {
-																Log.e("osama",
-																		e.toString());
-															}
-														}
-
-													}
-												}.start();
+												// countText = (TextView)
+												// findViewById(R.id.timer);
+												// counter = new CountDownTimer(
+												// 10000, 1000) {
+												//
+												// @Override
+												// public void onTick(
+												// long millisUntilFinished) {
+												// countText
+												// .setText("00:"
+												// + millisUntilFinished
+												// / 1000);
+												// }
+												//
+												// @Override
+												// public void onFinish() {
+												// if (data != null) {
+												// try {
+												// String placeId = data
+												// .getJSONObject(
+												// 0)
+												// .getString(
+												// "id");
+												// countText
+												// .setText("--:--");
+												// counter.cancel();
+												// post(placeId);
+												// } catch (JSONException e) {
+												// Log.e("osama",
+												// e.toString());
+												// }
+												// }
+												//
+												// }
+												// }.start();
 											}
 										});
 									} catch (JSONException e) {
@@ -368,30 +367,33 @@ public class Post extends ListActivity implements
 
 	@Override
 	public void onNdefPushComplete(NfcEvent event) {
-		final String eventString = "onNdefPushComplete\n" + event.toString();
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				Toast.makeText(getApplicationContext(), "onNdefPushComplete",
-						Toast.LENGTH_LONG).show();
-
-				Toast.makeText(getApplicationContext(), eventString,
-						Toast.LENGTH_LONG).show();
-			}
-		});
+		finish();
 	}
 
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		// TODO: try to decrease the API level
 
-		String userId = getUserId();
-		Toast.makeText(getApplicationContext(), "your id is: " + userId,
-				Toast.LENGTH_SHORT).show();
-		NdefRecord rtdUriRecord = NdefRecord.createUri("id://" + userId);
+		final String stringOut = id;
+		// final String stringOut = "this is ID";
+		runOnUiThread(new Runnable() {
 
-		NdefMessage ndefMessageout = new NdefMessage(rtdUriRecord);
+			@Override
+			public void run() {
+
+				Toast.makeText(getApplicationContext(), stringOut,
+						Toast.LENGTH_LONG).show();
+			}
+		});
+
+		byte[] bytesOut = stringOut.getBytes();
+
+		NdefRecord ndefRecordOut = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
+				"text/plain".getBytes(), new byte[] {}, bytesOut);
+
+		NdefMessage ndefMessageout = new NdefMessage(ndefRecordOut);
+
+		Log.d("osama", ndefMessageout.toString());
 		return ndefMessageout;
 	}
 
@@ -408,7 +410,7 @@ public class Post extends ListActivity implements
 								+ data.getJSONObject(position)
 										.getString("name"), Toast.LENGTH_SHORT)
 						.show();
-				counter.cancel();
+				// counter.cancel();
 				finish();
 			} else {
 				Log.e("osama", "the data was null!!");
@@ -450,10 +452,11 @@ public class Post extends ListActivity implements
 						"nfcAdapter==null, no NFC adapter exists",
 						Toast.LENGTH_LONG).show();
 			} else {
-				Toast.makeText(getApplicationContext(), "Set Callback(s)",
-						Toast.LENGTH_LONG).show();
 				nfcAdapter.setNdefPushMessageCallback(this, this);
 				nfcAdapter.setOnNdefPushCompleteCallback(this, this);
+
+				Toast.makeText(getApplicationContext(), "NFC adapter is ready",
+						Toast.LENGTH_LONG).show();
 			}
 		}
 	}
@@ -481,34 +484,33 @@ public class Post extends ListActivity implements
 		alert.show();
 	}
 
-	private String getUserId() {
-		Session session = Session.getActiveSession();
+	private void setUserId() {
+		final Session session = Session.getActiveSession();
 		if (session != null && session.isOpened()) {
 			// send a request to get the user id
 
-			new Request(session, "/me", null, HttpMethod.GET,
-					new Request.Callback() {
-
+			Request request = Request.newMeRequest(session,
+					new Request.GraphUserCallback() {
 						@Override
-						public void onCompleted(Response response) {
-							final GraphObject graphObject = response
-									.getGraphObject();
-							if (graphObject != null) {
+						public void onCompleted(GraphUser user,
+								Response response) {
+							// If the response is successful
+							if (session == Session.getActiveSession()) {
+								if (user != null) {
+									id = user.getId();// user id
 
-								runOnUiThread(new Runnable() {
-
-									@Override
-									public void run() {
-										id = (String) graphObject
-												.getProperty("id");
-									}
-								});
+									Toast.makeText(getApplicationContext(), id,
+											Toast.LENGTH_SHORT).show();
+								}
 							}
 						}
-					}).executeAndWait();
+					});
+
+			request.executeAsync();
+			// return id;
 		}
 
-		return id;
+		// return null;
 	}
 
 	/**
@@ -521,48 +523,42 @@ public class Post extends ListActivity implements
 				.getDefaultSharedPreferences(getBaseContext());
 		String message = sharedPreferences.getString("message",
 				"I was there :)");
-		Bundle params = new Bundle();
-		params.putString("message", message);
-		params.putString("place", placeId);
 
-		new Request(Session.getActiveSession(), "/me/feed", params,
-				HttpMethod.POST, new Request.Callback() {
+		if (getIntent().getAction() != null
+				&& getIntent().getAction().equals(
+						NfcAdapter.ACTION_NDEF_DISCOVERED)) {
+			// tag friend in the post.
 
-					@Override
-					public void onCompleted(Response response) {
-						Log.d("osama",
-								"the post response was: " + response.toString());
-					}
-				}).executeAsync();
-	}
+			Bundle params = new Bundle();
+			params.putString("message", message);
+			params.putString("place", placeId);
+			params.putString("tags", friendId);
 
-	/**
-	 * @author osama </br> use this method to post a check-in with a friend
-	 * @param placeId
-	 * @param friendId
-	 */
-	private void post(String placeId, String friendId) {
-		// TODO: support multiple tags by providing a comma-separated id
+			new Request(Session.getActiveSession(), "/me/feed", params,
+					HttpMethod.POST, new Request.Callback() {
 
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-		String message = sharedPreferences.getString("message",
-				"I was there :)");
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama", "posting with a friend");
+						}
+					}).executeAsync();
+		} else {
+			// post without tags.
 
-		Bundle params = new Bundle();
-		params.putString("message", message);
-		params.putString("place", placeId);
-		params.putString("tags", friendId);
+			Bundle params = new Bundle();
+			params.putString("message", message);
+			params.putString("place", placeId);
 
-		new Request(Session.getActiveSession(), "/me/feed", params,
-				HttpMethod.POST, new Request.Callback() {
+			new Request(Session.getActiveSession(), "/me/feed", params,
+					HttpMethod.POST, new Request.Callback() {
 
-					@Override
-					public void onCompleted(Response response) {
-						Log.d("osama",
-								"the post response was: " + response.toString());
-					}
-				}).executeAsync();
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama", "posting alone");
+						}
+					}).executeAsync();
+		}
+		finish();
 	}
 
 	private void populateListView() {
@@ -628,9 +624,9 @@ public class Post extends ListActivity implements
 
 	public void addPlaceOnClick(View view) {
 		// cancel the counter
-		if (counter != null) {
-			counter.cancel();
-		}
+		// if (counter != null) {
+		// counter.cancel();
+		// }
 
 		// Display a dialog to get the place name from user.
 
