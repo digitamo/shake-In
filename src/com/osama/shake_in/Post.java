@@ -24,16 +24,15 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.HttpMethod;
@@ -67,10 +66,12 @@ public class Post extends ListActivity implements
 	// private TextView countText;
 	// private CountDownTimer counter;
 	private boolean locationDetected;
+	private boolean myPlaces = false;
 	private Location location;
 	private ProgressBar progressBar;
 	private UiLifecycleHelper uiHelper;
 	private JSONArray data;
+	private JSONArray myPlacesData;
 	private Session.StatusCallback callBack = new Session.StatusCallback() {
 
 		@Override
@@ -83,6 +84,9 @@ public class Post extends ListActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
 		setContentView(R.layout.post);
 		locationDetected = false;
 
@@ -274,7 +278,6 @@ public class Post extends ListActivity implements
 									try {
 										final JSONArray JSONdata = result
 												.getJSONArray("data");
-										Log.d("osama", JSONdata.toString(1));
 
 										runOnUiThread(new Runnable() {
 
@@ -400,23 +403,45 @@ public class Post extends ListActivity implements
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		try {
-			if (data != null) {
-				String placeId = data.getJSONObject(position).getString("id");
-				post(placeId);
-				Toast.makeText(
-						this,
-						"posting check-in at: "
-								+ data.getJSONObject(position)
-										.getString("name"), Toast.LENGTH_SHORT)
-						.show();
-				// counter.cancel();
-				finish();
+		if (myPlaces) {
+			if (myPlacesData != null) {
+				try {
+					// String objectId = myPlacesData.getJSONObject(position)
+					// .getString("id");
+
+					String placeTitle = myPlacesData.getJSONObject(position)
+							.getString("title");
+
+					customPost(placeTitle);
+					// counter.cancel();
+					finish();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			} else {
-				Log.e("osama", "the data was null!!");
+				Log.e("osama", "myPlacesData was null!!");
+				Toast.makeText(getApplicationContext(),
+						"myPlacesData was null!!", Toast.LENGTH_SHORT).show();
 			}
-		} catch (JSONException e) {
-			Log.e("osama", "error parsing JSON!!");
+		} else {
+			try {
+				if (data != null) {
+					String placeId = data.getJSONObject(position).getString(
+							"id");
+					post(placeId);
+					Toast.makeText(
+							this,
+							"posting check-in at: "
+									+ data.getJSONObject(position).getString(
+											"name"), Toast.LENGTH_SHORT).show();
+					// counter.cancel();
+					finish();
+				} else {
+					Log.e("osama", "the data was null!!");
+				}
+			} catch (JSONException e) {
+				Log.e("osama", "error parsing JSON!!");
+			}
 		}
 	}
 
@@ -448,8 +473,7 @@ public class Post extends ListActivity implements
 			if (nfcAdapter == null) {
 				// TODO: try to enable NFC!!
 
-				Toast.makeText(getApplicationContext(),
-						"nfcAdapter==null, no NFC adapter exists",
+				Toast.makeText(getApplicationContext(), "please enable NFC!",
 						Toast.LENGTH_LONG).show();
 			} else {
 				nfcAdapter.setNdefPushMessageCallback(this, this);
@@ -498,9 +522,6 @@ public class Post extends ListActivity implements
 							if (session == Session.getActiveSession()) {
 								if (user != null) {
 									id = user.getId();// user id
-
-									Toast.makeText(getApplicationContext(), id,
-											Toast.LENGTH_SHORT).show();
 								}
 							}
 						}
@@ -555,9 +576,22 @@ public class Post extends ListActivity implements
 						@Override
 						public void onCompleted(Response response) {
 							Log.d("osama", "posting alone");
+							Log.d("osama",
+									"the post response was: "
+											+ response.toString());
 						}
 					}).executeAsync();
 		}
+		finish();
+	}
+
+	private void customPost(String objectTitle) {
+		// TODO: explicit share the post using the old object
+
+		Toast.makeText(getApplicationContext(),
+				"TODO: explicit share the post", Toast.LENGTH_SHORT).show();
+
+		displayShareDialogIII(objectTitle);
 		finish();
 	}
 
@@ -602,12 +636,17 @@ public class Post extends ListActivity implements
 			some_where.setProperty("title", placeName);
 			some_where.setProperty("image",
 					"http://shake-in.parseapp.com/shakeIn.png");
+			// some_where.setProperty("url", "http://shake-in.parseapp.com/" +
+			// placeName );
 			some_where.setProperty("url", null);
 			if (locationDetected) {
 				some_where.getData().setProperty("place:location:latitude",
 						location.getLatitude());
 				some_where.getData().setProperty("place:location:longitude",
 						location.getLongitude());
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"no location detected!", Toast.LENGTH_SHORT).show();
 			}
 			// some_where.setProperty("description", "finally it runs");
 
@@ -667,4 +706,43 @@ public class Post extends ListActivity implements
 
 	}
 
+	public void myPlacesOnClick(View view) {
+		myPlaces = !myPlaces;
+
+		if (myPlaces) {
+			new Request(Session.getActiveSession(),
+					"me/objects/shake-in:some_where", null, null,
+					new Request.Callback() {
+
+						@Override
+						public void onCompleted(Response response) {
+
+							try {
+								ArrayList<String> places = new ArrayList<String>();
+
+								myPlacesData = response.getGraphObject()
+										.getInnerJSONObject()
+										.getJSONArray("data");
+
+								for (int i = 0; i < myPlacesData.length(); i++) {
+									places.add(myPlacesData.getJSONObject(i)
+											.optString("title"));
+
+								}
+
+								ArrayAdapter<String> adapter = new ArrayAdapter<>(
+										getBaseContext(), R.layout.simple_list,
+										places);
+
+								setListAdapter(adapter);
+
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+					}).executeAsync();
+		} else {
+			populateListView();
+		}
+	}
 }

@@ -3,8 +3,10 @@ package com.osama.shake_in;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,6 +15,7 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 //import android.os.Handler;
 //import android.os.HandlerThread;
@@ -28,8 +31,24 @@ public class Listener extends Service implements SensorEventListener {
 	private Sensor accelerometer;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
-	private static final int SHAKE_THRESHOLD = 93;
+	private static final int SHAKE_THRESHOLD = 139;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
+
+	// private final BroadcastReceiver receiver = new BroadcastReceiver() {
+	// @Override
+	// public void onReceive(Context context, Intent intent) {
+	// if (Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
+	// KeyEvent event = (KeyEvent) intent
+	// .getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+	// if (KeyEvent.ACTION_DOWN == event.getKeyCode()) {
+	// Toast.makeText(getApplicationContext(), "keydown",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// }
+	// }
+	// }
+	//
+	// };
 
 	/*
 	 * public final class ServiceHandler extends Handler { public
@@ -50,6 +69,11 @@ public class Listener extends Service implements SensorEventListener {
 		// mServiceLooper = thread.getLooper();
 		// mServiceHandler = new ServiceHandler(mServiceLooper);
 		startForeground();
+
+		// IntentFilter filter = new IntentFilter();
+		// filter.addAction(Intent.ACTION_MEDIA_BUTTON);
+		//
+		// registerReceiver(receiver, filter);
 
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		accelerometer = sensorManager
@@ -97,8 +121,10 @@ public class Listener extends Service implements SensorEventListener {
 		if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			long curTime = System.currentTimeMillis();
 			if ((curTime - lastUpdate) > 100) {
-				float x = sensorEvent.values[0];
-				float y = sensorEvent.values[1];
+				// float x = sensorEvent.values[0];
+				// float y = sensorEvent.values[1];
+				float x = 0;
+				float y = 0;
 				float z = sensorEvent.values[2];
 
 				long diffTime = curTime - lastUpdate;
@@ -110,11 +136,10 @@ public class Listener extends Service implements SensorEventListener {
 				if (speed > SHAKE_THRESHOLD) {
 					vibrate(500);
 					Log.d("osama", "Posting to Facebook");
-					Toast.makeText(getBaseContext(), "Posting to Facebook",
-							Toast.LENGTH_LONG).show();
 
 					Intent intent = new Intent(this, Post.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+							| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					startActivity(intent);
 				}
 
@@ -124,14 +149,14 @@ public class Listener extends Service implements SensorEventListener {
 			}
 		}
 	}
-	
 
 	private void startForeground() {
 
 		// Notification notification = new Notification(R.drawable.ic_launcher,
 		// "shake-in running", System.currentTimeMillis());
 
-		Intent notificationIntent = new Intent(this, Main.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		Intent notificationIntent = new Intent(this, Main.class)
+				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
 

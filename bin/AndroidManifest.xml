@@ -30,14 +30,16 @@
         </activity>
         <activity
             android:name="com.osama.shake_in.Post"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog" 
-            android:launchMode="singleTop">
+            android:theme="@android:style/Theme.DeviceDefault.Dialog" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="text/plain" />
+                <data
+                    android:host="com.osama.shake_in"
+                    android:pathPrefix="/"
+                    android:scheme="id" />
             </intent-filter>
         </activity>
         <activity
