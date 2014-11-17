@@ -158,7 +158,8 @@ public class Main extends Activity {
 			Exception exception) {
 
 		if (state.isOpened()) {
-			Toast.makeText(this, "logged in :D", Toast.LENGTH_SHORT).show();
+			Log.d("osama", "logged in");
+
 			login.setVisibility(View.GONE);
 			setProfilePic();
 			if (pendingPublishReauthorization
@@ -167,7 +168,8 @@ public class Main extends Activity {
 				openSession();
 			}
 		} else if (state.isClosed()) {
-			Toast.makeText(this, "logged out :(", Toast.LENGTH_SHORT).show();
+			Log.d("osama", "logged out");
+
 			profilePic.setVisibility(View.GONE);
 			login.setVisibility(View.VISIBLE);
 		}

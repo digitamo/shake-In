@@ -50,8 +50,9 @@ public class TestII extends Activity {
 		uihHelper.onCreate(savedInstanceState);
 
 		try {
-			// testWithJSON();
-			post();
+//			testVisit();
+			 testWithJSON();
+			// post();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +100,7 @@ public class TestII extends Activity {
 		// TODO : try to do the same but with place
 		place.put("image",
 				"https://furious-mist-4378.herokuapp.com/books/a_game_of_thrones.png");
-		place.put("title", "my test o,o");
+		place.put("title", "O,O");
 		place.put("url", null);
 		place.put(
 				"description",
@@ -114,8 +115,6 @@ public class TestII extends Activity {
 		// book.put("isbn", "0-553-57340-3");
 		// data.put("book", book);
 		place.put("data", data);
-
-		Log.d("osama", place.toString(1));
 
 		Bundle objectParams = new Bundle();
 		objectParams.putString("object", place.toString());
@@ -146,6 +145,7 @@ public class TestII extends Activity {
 
 		Bundle params = new Bundle();
 		params.putString("generic_place", "{result=objectCreate:$.id}");
+		params.putString("fb:explicitly_shared", "true");
 
 		// params.putString("message", message);
 		// params.putString("book", "{result=objectCreate:$.id}");
@@ -154,6 +154,86 @@ public class TestII extends Activity {
 		Request postRequest = new Request(Session.getActiveSession(),
 				"me/places.saves", params, HttpMethod.POST,
 				new Request.Callback() {
+
+					@Override
+					public void onCompleted(Response response) {
+						Log.d("osama",
+								"post response --> " + response.toString());
+
+						text.setText(text.getText().toString() + " \n \n "
+								+ response.toString());
+					}
+				});
+
+		requestBatch.add(postRequest);
+		// ========================================================================
+
+		requestBatch.executeAsync();
+	}
+
+	private void testVisit() throws JSONException {
+		// TODO: share using the visit action
+
+		RequestBatch requestBatch = new RequestBatch();
+
+		JSONObject place = new JSONObject();
+		// TODO : try to do the same but with place
+		place.put("image",
+				"https://furious-mist-4378.herokuapp.com/books/a_game_of_thrones.png");
+		place.put("title", "o,O");
+		place.put("url", null);
+		place.put(
+				"description",
+				"In the frozen wastes to the north of Winterfell, sinister and supernatural forces are mustering.");
+		// place.put("scrape", "true");
+		JSONObject data = new JSONObject();
+		// JSONObject book = new JSONObject();
+		JSONObject location = new JSONObject();
+		location.put("latitude", "65.9667");
+		location.put("longitude", "-18.5333");
+		data.put("location", location);
+		// book.put("isbn", "0-553-57340-3");
+		// data.put("book", book);
+		place.put("data", data);
+
+		Bundle objectParams = new Bundle();
+		objectParams.putString("object", place.toString());
+
+		Request objectRequest = new Request(Session.getActiveSession(),
+				"me/objects/place", objectParams, HttpMethod.POST,
+				new Request.Callback() {
+
+					@Override
+					public void onCompleted(Response response) {
+						Log.d("osama",
+								"object creation ->" + response.toString());
+
+						text.setText("object creation ->" + response.toString());
+					}
+				});
+		//
+		objectRequest.setBatchEntryName("objectCreate");
+		requestBatch.add(objectRequest);
+
+		// String message = "post from objectAPI";
+
+		// ========================================================================
+		// JSONObject post = new JSONObject();
+		// // post.put("message", message);
+		// post.put("book", "{result=objectCreate:$.id}");
+		// // post.put("object_attachment", "716409398450073");
+
+		Bundle params = new Bundle();
+		params.putString("place", "{result=objectCreate:$.id}");
+		params.putString("fb:explicitly_shared", "true");
+
+		// params.putString("message", message);
+		// params.putString("book", "{result=objectCreate:$.id}");
+		// params.putString("object", post.toString());
+
+		Request postRequest = new Request(Session.getActiveSession(),
+				"graph.facebook.com/me/shake-in:visit", params,
+				HttpMethod.POST, new Request.Callback() {
 
 					@Override
 					public void onCompleted(Response response) {

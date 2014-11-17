@@ -30,6 +30,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -37,15 +40,12 @@ import android.widget.Toast;
 
 import com.facebook.HttpMethod;
 import com.facebook.Request;
+import com.facebook.RequestBatch;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
-import com.facebook.model.OpenGraphAction;
-import com.facebook.model.OpenGraphObject;
-import com.facebook.widget.FacebookDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -60,6 +60,7 @@ public class Post extends ListActivity implements
 		CreateNdefMessageCallback, OnNdefPushCompleteCallback {
 	private LocationRequest locationRequest;
 	private String id;
+	private String userName;
 	private String friendId;
 	private NfcAdapter nfcAdapter;
 	private GoogleApiClient googleApiClient;
@@ -90,8 +91,7 @@ public class Post extends ListActivity implements
 		setContentView(R.layout.post);
 		locationDetected = false;
 
-		// TODO: check for Internet, GPS and NFC.
-
+		setUserId();
 		// checking for Internet connection.
 		if (!isInternetActive()) {
 			new AlertDialog.Builder(this).setTitle("Warning!")
@@ -109,14 +109,17 @@ public class Post extends ListActivity implements
 		final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			buildAlertMessageNoGps();
+
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			if (sharedPreferences.getBoolean("GPSWarning", true)) {
+				buildAlertMessageNoGps();
+			}
 		}
 
 		googleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(LocationServices.API).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).build();
-
-		setUserId();
 
 		prepareNFC();
 
@@ -195,32 +198,33 @@ public class Post extends ListActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		uiHelper.onActivityResult(requestCode, resultCode, data);
+
 		// handle the share dialog result here
-		uiHelper.onActivityResult(requestCode, resultCode, data,
-				new FacebookDialog.Callback() {
-					// XXX:you can handle the shareDialog response here
-					@Override
-					public void onError(FacebookDialog.PendingCall pendingCall,
-							Exception error, Bundle data) {
-						Log.e("Post",
-								String.format("Error: %s", error.toString()));
-					}
-
-					@Override
-					public void onComplete(
-							FacebookDialog.PendingCall pendingCall, Bundle data) {
-						Toast.makeText(
-								getBaseContext(),
-								String.valueOf(FacebookDialog
-										.getNativeDialogDidComplete(data)),
-								Toast.LENGTH_SHORT).show();
-
-						Log.i("Activity", "Success!");
-						// XXX: open the session
-						finish();
-
-					}
-				});
+		// uiHelper.onActivityResult(requestCode, resultCode, data,
+		// new FacebookDialog.Callback() {
+		// // XXX:you can handle the shareDialog response here
+		// @Override
+		// public void onError(FacebookDialog.PendingCall pendingCall,
+		// Exception error, Bundle data) {
+		// Log.e("Post",
+		// String.format("Error: %s", error.toString()));
+		// }
+		//
+		// @Override
+		// public void onComplete(
+		// FacebookDialog.PendingCall pendingCall, Bundle data) {
+		// Toast.makeText(
+		// getBaseContext(),
+		// String.valueOf(FacebookDialog
+		// .getNativeDialogDidComplete(data)),
+		// Toast.LENGTH_SHORT).show();
+		//
+		// Log.i("Activity", "Success!");
+		// finish();
+		//
+		// }
+		// });
 	}
 
 	@Override
@@ -254,7 +258,6 @@ public class Post extends ListActivity implements
 			if (Session.getActiveSession().isOpened()) {
 				// make a call to retrieve the page ID
 
-				// XXX: you could also use the placePickerFragment
 				// XXX: the fql is not available at v2.1 :'(
 
 				Bundle params = new Bundle();
@@ -375,7 +378,6 @@ public class Post extends ListActivity implements
 
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent event) {
-		// TODO: try to decrease the API level
 
 		final String stringOut = id;
 		// final String stringOut = "this is ID";
@@ -409,10 +411,10 @@ public class Post extends ListActivity implements
 					// String objectId = myPlacesData.getJSONObject(position)
 					// .getString("id");
 
-					String placeTitle = myPlacesData.getJSONObject(position)
-							.getString("title");
+					String placeId = myPlacesData.getJSONObject(position)
+							.getString("id");
 
-					customPost(placeTitle);
+					postOldPlace(placeId);
 					// counter.cancel();
 					finish();
 				} catch (JSONException e) {
@@ -486,10 +488,28 @@ public class Post extends ListActivity implements
 	}
 
 	private void buildAlertMessageNoGps() {
+		View checkBoxView = View.inflate(this, R.layout.checkbox, null);
+		CheckBox checkBox = (CheckBox) checkBoxView.findViewById(R.id.checkbox);
+		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				Toast.makeText(Post.this, "chek box changed", Toast.LENGTH_SHORT).show();
+				
+				if (isChecked) {
+					SharedPreferences sharedPreferences = PreferenceManager
+							.getDefaultSharedPreferences(getBaseContext());
+					sharedPreferences.edit().putBoolean("GPSWarning", false).apply();
+				}
+			}
+		});
+
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(
 				"Your GPS seems to be disabled, do you want to enable it?")
-				.setCancelable(false)
+				.setCancelable(true)
+				.setView(checkBoxView)
 				.setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
 							public void onClick(final DialogInterface dialog,
@@ -522,6 +542,7 @@ public class Post extends ListActivity implements
 							if (session == Session.getActiveSession()) {
 								if (user != null) {
 									id = user.getId();// user id
+									userName = user.getName();
 								}
 							}
 						}
@@ -585,13 +606,100 @@ public class Post extends ListActivity implements
 		finish();
 	}
 
-	private void customPost(String objectTitle) {
-		// TODO: explicit share the post using the old object
+	private void postNewPlace(String placeName) throws JSONException {
+		RequestBatch requestBatch = new RequestBatch();
 
-		Toast.makeText(getApplicationContext(),
-				"TODO: explicit share the post", Toast.LENGTH_SHORT).show();
+		JSONObject place = new JSONObject();
+		place.put("image", "http://shake-in.parseapp.com/shakeIn.png");
+		place.put("title", placeName);
+		place.put("url", null);
+		place.put("description", userName + "was at " + placeName
+				+ "using shake-in.");
+		// place.put("scrape", "true");
+		JSONObject data = new JSONObject();
+		// JSONObject book = new JSONObject();
+		JSONObject location = new JSONObject();
+		location.put("latitude", String.valueOf(this.location.getLatitude()));
+		location.put("longitude", String.valueOf(this.location.getLongitude()));
+		data.put("location", location);
+		// book.put("isbn", "0-553-57340-3");
+		// data.put("book", book);
+		place.put("data", data);
 
-		displayShareDialogIII(objectTitle);
+		Bundle objectParams = new Bundle();
+		objectParams.putString("object", place.toString());
+
+		Request objectRequest = new Request(Session.getActiveSession(),
+				"me/objects/place", objectParams, HttpMethod.POST,
+				new Request.Callback() {
+
+					@Override
+					public void onCompleted(Response response) {
+						Log.d("osama",
+								"object creation ->" + response.toString());
+
+					}
+				});
+		//
+		objectRequest.setBatchEntryName("objectCreate");
+		requestBatch.add(objectRequest);
+
+		// String message = "post from objectAPI";
+
+		// ========================================================================
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		String message = sharedPreferences.getString("message",
+				"I was there :)");
+
+		Bundle params = new Bundle();
+		params.putString("generic_place", "{result=objectCreate:$.id}");
+		params.putString("fb:explicitly_shared", "true");
+
+		params.putString("message", message);
+
+		Request postRequest = new Request(Session.getActiveSession(),
+				"me/places.saves", params, HttpMethod.POST,
+				new Request.Callback() {
+
+					@Override
+					public void onCompleted(Response response) {
+						Log.d("osama",
+								"post response --> " + response.toString());
+
+					}
+				});
+
+		requestBatch.add(postRequest);
+		// ========================================================================
+
+		requestBatch.executeAsync();
+		finish();
+	}
+
+	private void postOldPlace(String placeId) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		String message = sharedPreferences.getString("message",
+				"I was there :)");
+
+		Bundle params = new Bundle();
+		params.putString("generic_place", placeId);
+		params.putString("fb:explicitly_shared", "true");
+		params.putString("message", message);
+
+		Request postRequest = new Request(Session.getActiveSession(),
+				"me/places.saves", params, HttpMethod.POST,
+				new Request.Callback() {
+
+					@Override
+					public void onCompleted(Response response) {
+						Log.d("osama",
+								"post response --> " + response.toString());
+
+					}
+				});
+		postRequest.executeAsync();
 		finish();
 	}
 
@@ -611,53 +719,6 @@ public class Post extends ListActivity implements
 			setListAdapter(adapter);
 		} else {
 			Log.e("osama", "the data or JSONdata was null!!");
-		}
-	}
-
-	protected void displayShareDialogIII(String placeName) {
-		// this one uses the user owned objects and the user is capable of
-		// creating objects
-
-		// only show the share dialog if the user has the app installed
-		if (FacebookDialog.canPresentOpenGraphActionDialog(
-				getApplicationContext(),
-				FacebookDialog.OpenGraphActionDialogFeature.OG_ACTION_DIALOG)) {
-
-			// you need to close the session first.
-			if (Session.getActiveSession().isOpened()) {
-				// Session.getActiveSession().closeAndClearTokenInformation();
-				Session.getActiveSession().close();
-			}
-
-			// OpenGraphObject some_where = OpenGraphObject.Factory
-			// .createForPost("shake-in:some_where");
-			OpenGraphObject some_where = OpenGraphObject.Factory
-					.createForPost("shake-in:some_where");
-			some_where.setProperty("title", placeName);
-			some_where.setProperty("image",
-					"http://shake-in.parseapp.com/shakeIn.png");
-			// some_where.setProperty("url", "http://shake-in.parseapp.com/" +
-			// placeName );
-			some_where.setProperty("url", null);
-			if (locationDetected) {
-				some_where.getData().setProperty("place:location:latitude",
-						location.getLatitude());
-				some_where.getData().setProperty("place:location:longitude",
-						location.getLongitude());
-			} else {
-				Toast.makeText(getApplicationContext(),
-						"no location detected!", Toast.LENGTH_SHORT).show();
-			}
-			// some_where.setProperty("description", "finally it runs");
-
-			OpenGraphAction action = GraphObject.Factory
-					.create(OpenGraphAction.class);
-			action.setProperty("some_where", some_where);
-
-			@SuppressWarnings("deprecation")
-			FacebookDialog shareDialog = new FacebookDialog.OpenGraphActionDialogBuilder(
-					this, action, "shake-in:visit", "some_where").build();
-			uiHelper.trackPendingDialogCall(shareDialog.present());
 		}
 	}
 
@@ -687,10 +748,16 @@ public class Post extends ListActivity implements
 						String placeName = input.getText().toString();
 
 						// show the shared-Dialog
-						displayShareDialogIII(placeName);
+						// displayShareDialogIII(placeName);
+						try {
+							postNewPlace(placeName);
+						} catch (JSONException e) {
+							Toast.makeText(getApplicationContext(),
+									"please try again", Toast.LENGTH_LONG)
+									.show();
+						}
 					}
 
-					// TODO: use a handler to call the method
 				});
 			}
 		});
@@ -708,11 +775,10 @@ public class Post extends ListActivity implements
 
 	public void myPlacesOnClick(View view) {
 		myPlaces = !myPlaces;
-
+		// XXX: when you use a custom action don't forget to change what's here
 		if (myPlaces) {
-			new Request(Session.getActiveSession(),
-					"me/objects/shake-in:some_where", null, null,
-					new Request.Callback() {
+			new Request(Session.getActiveSession(), "me/objects/place", null,
+					null, new Request.Callback() {
 
 						@Override
 						public void onCompleted(Response response) {
@@ -745,4 +811,5 @@ public class Post extends ListActivity implements
 			populateListView();
 		}
 	}
+
 }

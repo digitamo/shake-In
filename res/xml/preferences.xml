@@ -26,5 +26,11 @@
         android:positiveButtonText="Ok"
         android:summary="@string/default_message_desc"
         android:title="@string/default_message" />
+    
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="GPSWarning"
+        android:summary="@string/GPSWarning_desc"
+        android:title="@string/GPSWaning" />
 
 </PreferenceScreen>

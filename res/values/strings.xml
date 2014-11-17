@@ -15,6 +15,8 @@
     <string name="login">login</string>
     <string name="logout">logout</string>
     <string name="test">Test</string>
-    <string name="post_desc">click here to detect your location and post post</string>
+    <string name="post_desc">click here to detect your location and post a post</string>
+    <string name="GPSWarning_desc">Show GPS warning if it\'s disabled!</string>
+    <string name="GPSWaning">GPS warning</string>
 
 </resources>

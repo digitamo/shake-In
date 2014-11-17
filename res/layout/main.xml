@@ -59,15 +59,15 @@
         android:text="Post"
         tools:ignore="HardcodedText" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnPost"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:onClick="testObjectAPIOnClick"
-        android:text="Test -ObjectAPI-"
-        tools:ignore="HardcodedText" />
+<!--     <Button -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_below="@+id/btnPost" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_marginTop="30dp" -->
+<!--         android:onClick="testObjectAPIOnClick" -->
+<!--         android:text="Test -ObjectAPI-" -->
+<!--         tools:ignore="HardcodedText" /> -->
 
 </RelativeLayout>
 <!-- <Button -->
