@@ -16,6 +16,11 @@
         android:key="gesture"
         android:summary="@string/gesture_summary"
         android:title="@string/enable_gestures" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="GPSWarning"
+        android:summary="@string/GPSWarning_desc"
+        android:title="@string/GPSWaning" />
 
     <EditTextPreference
         android:defaultValue="I was there :)"
@@ -26,11 +31,5 @@
         android:positiveButtonText="Ok"
         android:summary="@string/default_message_desc"
         android:title="@string/default_message" />
-    
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="GPSWarning"
-        android:summary="@string/GPSWarning_desc"
-        android:title="@string/GPSWaning" />
 
 </PreferenceScreen>

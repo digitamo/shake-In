@@ -495,12 +495,12 @@ public class Post extends ListActivity implements
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				Toast.makeText(Post.this, "chek box changed", Toast.LENGTH_SHORT).show();
-				
+
 				if (isChecked) {
 					SharedPreferences sharedPreferences = PreferenceManager
 							.getDefaultSharedPreferences(getBaseContext());
-					sharedPreferences.edit().putBoolean("GPSWarning", false).apply();
+					sharedPreferences.edit().putBoolean("GPSWarning", false)
+							.apply();
 				}
 			}
 		});
@@ -607,99 +607,206 @@ public class Post extends ListActivity implements
 	}
 
 	private void postNewPlace(String placeName) throws JSONException {
-		RequestBatch requestBatch = new RequestBatch();
+		if (getIntent().getAction() != null
+				&& getIntent().getAction().equals(
+						NfcAdapter.ACTION_NDEF_DISCOVERED)) {
 
-		JSONObject place = new JSONObject();
-		place.put("image", "http://shake-in.parseapp.com/shakeIn.png");
-		place.put("title", placeName);
-		place.put("url", null);
-		place.put("description", userName + "was at " + placeName
-				+ "using shake-in.");
-		// place.put("scrape", "true");
-		JSONObject data = new JSONObject();
-		// JSONObject book = new JSONObject();
-		JSONObject location = new JSONObject();
-		location.put("latitude", String.valueOf(this.location.getLatitude()));
-		location.put("longitude", String.valueOf(this.location.getLongitude()));
-		data.put("location", location);
-		// book.put("isbn", "0-553-57340-3");
-		// data.put("book", book);
-		place.put("data", data);
+			RequestBatch requestBatch = new RequestBatch();
 
-		Bundle objectParams = new Bundle();
-		objectParams.putString("object", place.toString());
+			JSONObject place = new JSONObject();
+			place.put("image", "http://shake-in.parseapp.com/shakeIn.png");
+			place.put("title", placeName);
+			place.put("url", null);
+			place.put("description", userName + " was at " + placeName
+					+ " using shake-in.");
+			// place.put("scrape", "true");
+			JSONObject data = new JSONObject();
+			// JSONObject book = new JSONObject();
+			JSONObject location = new JSONObject();
+			location.put("latitude",
+					String.valueOf(this.location.getLatitude()));
+			location.put("longitude",
+					String.valueOf(this.location.getLongitude()));
+			data.put("location", location);
+			// book.put("isbn", "0-553-57340-3");
+			// data.put("book", book);
+			place.put("data", data);
 
-		Request objectRequest = new Request(Session.getActiveSession(),
-				"me/objects/place", objectParams, HttpMethod.POST,
-				new Request.Callback() {
+			Bundle objectParams = new Bundle();
+			objectParams.putString("object", place.toString());
 
-					@Override
-					public void onCompleted(Response response) {
-						Log.d("osama",
-								"object creation ->" + response.toString());
+			Request objectRequest = new Request(Session.getActiveSession(),
+					"me/objects/place", objectParams, HttpMethod.POST,
+					new Request.Callback() {
 
-					}
-				});
-		//
-		objectRequest.setBatchEntryName("objectCreate");
-		requestBatch.add(objectRequest);
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama",
+									"object creation ->" + response.toString());
 
-		// String message = "post from objectAPI";
+						}
+					});
+			//
+			objectRequest.setBatchEntryName("objectCreate");
+			requestBatch.add(objectRequest);
 
-		// ========================================================================
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-		String message = sharedPreferences.getString("message",
-				"I was there :)");
+			// String message = "post from objectAPI";
 
-		Bundle params = new Bundle();
-		params.putString("generic_place", "{result=objectCreate:$.id}");
-		params.putString("fb:explicitly_shared", "true");
+			// ========================================================================
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			String message = sharedPreferences.getString("message",
+					"I was there :)");
 
-		params.putString("message", message);
+			Bundle params = new Bundle();
+			params.putString("generic_place", "{result=objectCreate:$.id}");
+			params.putString("fb:explicitly_shared", "true");
 
-		Request postRequest = new Request(Session.getActiveSession(),
-				"me/places.saves", params, HttpMethod.POST,
-				new Request.Callback() {
+			params.putString("message", message);
+			params.putString("tags", friendId);
 
-					@Override
-					public void onCompleted(Response response) {
-						Log.d("osama",
-								"post response --> " + response.toString());
+			Request postRequest = new Request(Session.getActiveSession(),
+					"me/places.saves", params, HttpMethod.POST,
+					new Request.Callback() {
 
-					}
-				});
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama",
+									"post response --> " + response.toString());
 
-		requestBatch.add(postRequest);
-		// ========================================================================
+						}
+					});
 
-		requestBatch.executeAsync();
+			requestBatch.add(postRequest);
+			// ========================================================================
+
+			requestBatch.executeAsync();
+		} else {
+			RequestBatch requestBatch = new RequestBatch();
+
+			JSONObject place = new JSONObject();
+			place.put("image", "http://shake-in.parseapp.com/shakeIn.png");
+			place.put("title", placeName);
+			place.put("url", null);
+			place.put("description", userName + " was at " + placeName
+					+ " using shake-in.");
+			// place.put("scrape", "true");
+			JSONObject data = new JSONObject();
+			// JSONObject book = new JSONObject();
+			JSONObject location = new JSONObject();
+			location.put("latitude",
+					String.valueOf(this.location.getLatitude()));
+			location.put("longitude",
+					String.valueOf(this.location.getLongitude()));
+			data.put("location", location);
+			// book.put("isbn", "0-553-57340-3");
+			// data.put("book", book);
+			place.put("data", data);
+
+			Bundle objectParams = new Bundle();
+			objectParams.putString("object", place.toString());
+
+			Request objectRequest = new Request(Session.getActiveSession(),
+					"me/objects/place", objectParams, HttpMethod.POST,
+					new Request.Callback() {
+
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama",
+									"object creation ->" + response.toString());
+
+						}
+					});
+			//
+			objectRequest.setBatchEntryName("objectCreate");
+			requestBatch.add(objectRequest);
+
+			// String message = "post from objectAPI";
+
+			// ========================================================================
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			String message = sharedPreferences.getString("message",
+					"I was there :)");
+
+			Bundle params = new Bundle();
+			params.putString("generic_place", "{result=objectCreate:$.id}");
+			params.putString("fb:explicitly_shared", "true");
+
+			params.putString("message", message);
+
+			Request postRequest = new Request(Session.getActiveSession(),
+					"me/places.saves", params, HttpMethod.POST,
+					new Request.Callback() {
+
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama",
+									"post response --> " + response.toString());
+
+						}
+					});
+
+			requestBatch.add(postRequest);
+			// ========================================================================
+
+			requestBatch.executeAsync();
+		}
 		finish();
 	}
 
 	private void postOldPlace(String placeId) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-		String message = sharedPreferences.getString("message",
-				"I was there :)");
+		if (getIntent().getAction() != null
+				&& getIntent().getAction().equals(
+						NfcAdapter.ACTION_NDEF_DISCOVERED)) {
 
-		Bundle params = new Bundle();
-		params.putString("generic_place", placeId);
-		params.putString("fb:explicitly_shared", "true");
-		params.putString("message", message);
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			String message = sharedPreferences.getString("message",
+					"I was there :)");
 
-		Request postRequest = new Request(Session.getActiveSession(),
-				"me/places.saves", params, HttpMethod.POST,
-				new Request.Callback() {
+			Bundle params = new Bundle();
+			params.putString("generic_place", placeId);
+			params.putString("fb:explicitly_shared", "true");
+			params.putString("message", message);
+			params.putString("tags", friendId);
 
-					@Override
-					public void onCompleted(Response response) {
-						Log.d("osama",
-								"post response --> " + response.toString());
+			Request postRequest = new Request(Session.getActiveSession(),
+					"me/places.saves", params, HttpMethod.POST,
+					new Request.Callback() {
 
-					}
-				});
-		postRequest.executeAsync();
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama",
+									"post response --> " + response.toString());
+
+						}
+					});
+			postRequest.executeAsync();
+		} else {
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			String message = sharedPreferences.getString("message",
+					"I was there :)");
+
+			Bundle params = new Bundle();
+			params.putString("generic_place", placeId);
+			params.putString("fb:explicitly_shared", "true");
+			params.putString("message", message);
+
+			Request postRequest = new Request(Session.getActiveSession(),
+					"me/places.saves", params, HttpMethod.POST,
+					new Request.Callback() {
+
+						@Override
+						public void onCompleted(Response response) {
+							Log.d("osama",
+									"post response --> " + response.toString());
+
+						}
+					});
+			postRequest.executeAsync();
+		}
 		finish();
 	}
 
