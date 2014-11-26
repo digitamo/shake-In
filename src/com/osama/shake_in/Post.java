@@ -231,7 +231,7 @@ public class Post extends ListActivity implements
 	public void onConnected(Bundle connectionHint) {
 		// create a Location Request
 		locationRequest = LocationRequest.create()
-				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+				.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
 				.setInterval(1000);
 
 		LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -395,8 +395,9 @@ public class Post extends ListActivity implements
 
 		NdefRecord ndefRecordOut = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
 				"text/plain".getBytes(), new byte[] {}, bytesOut);
+		NdefRecord[] ndefRecords = { ndefRecordOut };
 
-		NdefMessage ndefMessageout = new NdefMessage(ndefRecordOut);
+		NdefMessage ndefMessageout = new NdefMessage(ndefRecords);
 
 		Log.d("osama", ndefMessageout.toString());
 		return ndefMessageout;

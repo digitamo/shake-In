@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.util.Log;
 //import android.os.Handler;
 //import android.os.HandlerThread;
@@ -27,7 +29,7 @@ public class Listener extends Service implements SensorEventListener {
 	private Sensor accelerometer;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
-	private static final int SHAKE_THRESHOLD = 139;
+	private static final int SHAKE_THRESHOLD = 193;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
 
 	// private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -64,7 +66,12 @@ public class Listener extends Service implements SensorEventListener {
 		//
 		// mServiceLooper = thread.getLooper();
 		// mServiceHandler = new ServiceHandler(mServiceLooper);
-		startForeground();
+
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		if (sharedPreferences.getBoolean("foreground_service", true)) {
+			startForeground();
+		}
 
 		// IntentFilter filter = new IntentFilter();
 		// filter.addAction(Intent.ACTION_MEDIA_BUTTON);

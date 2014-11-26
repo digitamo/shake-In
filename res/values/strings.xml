@@ -18,5 +18,7 @@
     <string name="post_desc">click here to detect your location and post a post</string>
     <string name="GPSWarning_desc">Show GPS warning if it\'s disabled!</string>
     <string name="GPSWaning">GPS warning</string>
+    <string name="foreground_service_title">show app notification</string>
+    <string name="foreground_service_desc">if you enable this the app will detect the gesture better, But it will always show a notification in the bar</string>
 
 </resources>

@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="auto_login"
-        android:summary="@string/auto_login_desc"
-        android:title="@string/auto_login" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="NFC"
-        android:summary="@string/NFC_summary"
-        android:title="@string/enable_NFC" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="gesture"
-        android:summary="@string/gesture_summary"
-        android:title="@string/enable_gestures" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="GPSWarning"
-        android:summary="@string/GPSWarning_desc"
-        android:title="@string/GPSWaning" />
-
     <EditTextPreference
         android:defaultValue="I was there :)"
         android:dialogIcon="@drawable/edit_text"
@@ -31,5 +10,37 @@
         android:positiveButtonText="Ok"
         android:summary="@string/default_message_desc"
         android:title="@string/default_message" />
+
+    <SeekBarPreference
+        android:defaultValue="193"
+        android:key="seekBar"
+        android:title="Set the default time" >
+    </SeekBarPreference>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="gesture"
+        android:summary="@string/gesture_summary"
+        android:title="@string/enable_gestures" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="foreground_service"
+        android:summary="@string/foreground_service_desc"
+        android:title="@string/foreground_service_title" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="GPSWarning"
+        android:summary="@string/GPSWarning_desc"
+        android:title="@string/GPSWaning" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="NFC"
+        android:summary="@string/NFC_summary"
+        android:title="@string/enable_NFC" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="auto_login"
+        android:summary="@string/auto_login_desc"
+        android:title="@string/auto_login" />
 
 </PreferenceScreen>
