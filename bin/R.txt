@@ -101,8 +101,6 @@ int attr maskedWalletDetailsHeaderTextAppearance 0x7f010088
 int attr maskedWalletDetailsLogoImageType 0x7f01008d
 int attr maskedWalletDetailsLogoTextColor 0x7f01008c
 int attr maskedWalletDetailsTextAppearance 0x7f010087
-int attr maxValue 0x7f0100a3
-int attr minValue 0x7f0100a2
 int attr multi_select 0x7f010095
 int attr navigationMode 0x7f010027
 int attr paddingEnd 0x7f010039
@@ -972,9 +970,6 @@ int styleable WalletFragmentStyle_maskedWalletDetailsHeaderTextAppearance 5
 int styleable WalletFragmentStyle_maskedWalletDetailsLogoImageType 10
 int styleable WalletFragmentStyle_maskedWalletDetailsLogoTextColor 9
 int styleable WalletFragmentStyle_maskedWalletDetailsTextAppearance 4
-int[] styleable com_osama_shake_in_SeekBarPreference { 0x7f0100a2, 0x7f0100a3 }
-int styleable com_osama_shake_in_SeekBarPreference_maxValue 1
-int styleable com_osama_shake_in_SeekBarPreference_minValue 0
 int[] styleable com_facebook_friend_picker_fragment { 0x7f010095 }
 int styleable com_facebook_friend_picker_fragment_multi_select 0
 int[] styleable com_facebook_login_view { 0x7f01009a, 0x7f01009b, 0x7f01009c, 0x7f01009d }

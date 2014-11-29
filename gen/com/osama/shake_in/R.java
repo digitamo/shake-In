@@ -777,22 +777,6 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int maskedWalletDetailsTextAppearance=0x7f010087;
-        /** <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int maxValue=0x7f0100a3;
-        /** <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int minValue=0x7f0100a2;
         /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -4646,49 +4630,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           @attr name com.osama.shake_in:maskedWalletDetailsTextAppearance
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsTextAppearance = 4;
-        /** Attributes that can be used with a com_osama_shake_in_SeekBarPreference.
-           <p>Includes the following attributes:</p>
-           <table>
-           <colgroup align="left" />
-           <colgroup align="left" />
-           <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #com_osama_shake_in_SeekBarPreference_maxValue com.osama.shake_in:maxValue}</code></td><td></td></tr>
-           <tr><td><code>{@link #com_osama_shake_in_SeekBarPreference_minValue com.osama.shake_in:minValue}</code></td><td></td></tr>
-           </table>
-           @see #com_osama_shake_in_SeekBarPreference_maxValue
-           @see #com_osama_shake_in_SeekBarPreference_minValue
-         */
-        public static final int[] com_osama_shake_in_SeekBarPreference = {
-            0x7f0100a2, 0x7f0100a3
-        };
-        /**
-          <p>This symbol is the offset where the {@link com.osama.shake_in.R.attr#maxValue}
-          attribute's value can be found in the {@link #com_osama_shake_in_SeekBarPreference} array.
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name com.osama.shake_in:maxValue
-        */
-        public static final int com_osama_shake_in_SeekBarPreference_maxValue = 1;
-        /**
-          <p>This symbol is the offset where the {@link com.osama.shake_in.R.attr#minValue}
-          attribute's value can be found in the {@link #com_osama_shake_in_SeekBarPreference} array.
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name com.osama.shake_in:minValue
-        */
-        public static final int com_osama_shake_in_SeekBarPreference_minValue = 0;
         /** Attributes that can be used with a com_facebook_friend_picker_fragment.
            <p>Includes the following attributes:</p>
            <table>

@@ -57,6 +57,11 @@ public class Settings extends PreferenceActivity implements
 
 			// TODO: use HandlerThread and Handler instead of restarting the
 			// service.
+
+			if (key.equals(key.equals("seekBarPreference"))) {
+				Toast.makeText(getApplicationContext(), "the senstivity changed",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 
 	}

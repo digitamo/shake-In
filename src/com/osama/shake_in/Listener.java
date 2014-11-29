@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -28,9 +29,10 @@ public class Listener extends Service implements SensorEventListener {
 	// private ServiceHandler mServiceHandler;
 	private SensorManager sensorManager;
 	private Sensor accelerometer;
+	// private SettingsContentObserver mSettingsContentObserver;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
-	private int shakeThreshold;
+	private int shakeThreshold = 193;
 	private static final int DEFAULT_SHAKE_THRESHOLD = 193;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
 
@@ -69,11 +71,20 @@ public class Listener extends Service implements SensorEventListener {
 		// mServiceLooper = thread.getLooper();
 		// mServiceHandler = new ServiceHandler(mServiceLooper);
 
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
+		// ==========================================================================
+		// mSettingsContentObserver = new SettingsContentObserver(this,
+		// new Handler());
+		// getApplicationContext().getContentResolver().registerContentObserver(
+		// android.provider.Settings.System.CONTENT_URI, true,
+		// mSettingsContentObserver);
+		// =========================================================================
 
-		shakeThreshold = sharedPreferences.getInt("seekBarPreference",
-				DEFAULT_SHAKE_THRESHOLD);
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		// shakeThreshold = sharedPreferences.getInt("seekBarPreference",
+		// DEFAULT_SHAKE_THRESHOLD);
+
 		Toast.makeText(getApplicationContext(),
 				"shake senstivity : " + shakeThreshold, Toast.LENGTH_SHORT)
 				.show();
@@ -111,7 +122,8 @@ public class Listener extends Service implements SensorEventListener {
 
 	@Override
 	public void onDestroy() {
-		Log.e("osama", "Destroyed");
+		// getApplicationContext().getContentResolver().unregisterContentObserver(
+		// mSettingsContentObserver);
 	}
 
 	@Override
@@ -168,24 +180,18 @@ public class Listener extends Service implements SensorEventListener {
 
 		Intent notificationIntent = new Intent(this, Main.class)
 				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		Intent sensitivityIntent = new Intent(this, SeekBarPreference.class)
-				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent mainPendingIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
-		PendingIntent sensitivityPendingIntent = PendingIntent.getActivity(this, 0,
-				sensitivityIntent, 0);
 
 		Notification notification = new Notification.Builder(this)
-				.setContentTitle("shake-in")
-				.setContentText("shake sensitivity: ")
+				.setContentTitle("shake sensitivity: ")
+				.setContentText("shake-in")
 				.setContentIntent(mainPendingIntent)
 				.setSmallIcon(R.drawable.location_64x64_white)
 				.setLargeIcon(
 						BitmapFactory.decodeResource(getResources(),
 								R.drawable.shake_in)).setAutoCancel(true)
-				.setProgress(200, shakeThreshold - 100, false)
-				.addAction(R.drawable.settings_gears, "change", sensitivityPendingIntent)
-				.build();
+				.setProgress(200, shakeThreshold - 100, false).build();
 
 		// notification.setLatestEventInfo(this, "shake-in",
 		// "I'm ready just shake-in", pendingIntent);
