@@ -4,19 +4,26 @@
     <string name="app_id">541479822618673</string>
     <string name="profile_pic">This is the user\'s profile picture</string>
     <string name="enable_NFC">Enable NFC</string>
-    <string name="NFC_summary"> enables you to tag a friend using NFC</string>
+    <string name="NFC_summary">   enables you to tag a friend using NFC</string>
     <string name="enable_gestures">Enable gesture</string>
-    <string name="gesture_summary">shake phone to post a check-in to facebook</string>
+    <string name="gesture_summary">   shake phone to post a check-in to facebook</string>
     <string name="addPlace">add place</string>
     <string name="default_message">Default message</string>
-    <string name="default_message_desc">change the default message in your post</string>
+    <string name="default_message_desc">   change the default message in your post</string>
     <string name="auto_login">Auto login</string>
-    <string name="auto_login_desc">login automatically when the app starts?</string>
+    <string name="auto_login_desc">   login automatically when the app starts?</string>
     <string name="login">login</string>
     <string name="logout">logout</string>
     <string name="test">Test</string>
-    <string name="post_desc">click here to detect your location and post a post</string>
-    <string name="GPSWarning_desc">Show GPS warning if it\'s disabled!</string>
+    <string name="post_desc">   click here to detect your location and post a post</string>
+    <string name="GPSWarning_desc">   show GPS warning if it\'s disabled!</string>
     <string name="GPSWaning">GPS warning</string>
+    <string name="foreground_service_title">show app notification</string>
+    <string name="foreground_service_desc">   if you enable this the app will detect the gesture better, But it will always show a notification in the bar</string>
+    <string name="dialog_title">dialog_title</string>
+    <string name="shake_sensitivity_title">Shake sensitivity</string>
+    <string name="shake_sensitivity_desc">   controls how strong you should shake your phone</string>
+
+    <color name="gray_color">#aaa</color>
 
 </resources>

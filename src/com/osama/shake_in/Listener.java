@@ -5,18 +5,22 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.util.Log;
 //import android.os.Handler;
 //import android.os.HandlerThread;
 //import android.os.Looper;
 //import android.os.Message;
+import android.widget.Toast;
 
 //  TODO: listen for the motion around the z axis only and you may add a custom gesture
 //  TODO: handle sending repeated events
@@ -25,9 +29,11 @@ public class Listener extends Service implements SensorEventListener {
 	// private ServiceHandler mServiceHandler;
 	private SensorManager sensorManager;
 	private Sensor accelerometer;
+	// private SettingsContentObserver mSettingsContentObserver;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
-	private static final int SHAKE_THRESHOLD = 139;
+	private int shakeThreshold = 193;
+	private static final int DEFAULT_SHAKE_THRESHOLD = 193;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
 
 	// private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -64,7 +70,27 @@ public class Listener extends Service implements SensorEventListener {
 		//
 		// mServiceLooper = thread.getLooper();
 		// mServiceHandler = new ServiceHandler(mServiceLooper);
-		startForeground();
+
+		// ==========================================================================
+		// mSettingsContentObserver = new SettingsContentObserver(this,
+		// new Handler());
+		// getApplicationContext().getContentResolver().registerContentObserver(
+		// android.provider.Settings.System.CONTENT_URI, true,
+		// mSettingsContentObserver);
+		// =========================================================================
+
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		// shakeThreshold = sharedPreferences.getInt("seekBarPreference",
+		// DEFAULT_SHAKE_THRESHOLD);
+
+		Toast.makeText(getApplicationContext(),
+				"shake senstivity : " + shakeThreshold, Toast.LENGTH_SHORT)
+				.show();
+		if (sharedPreferences.getBoolean("foreground_service", true)) {
+			startForeground();
+		}
 
 		// IntentFilter filter = new IntentFilter();
 		// filter.addAction(Intent.ACTION_MEDIA_BUTTON);
@@ -96,7 +122,8 @@ public class Listener extends Service implements SensorEventListener {
 
 	@Override
 	public void onDestroy() {
-		Log.e("osama", "Destroyed");
+		// getApplicationContext().getContentResolver().unregisterContentObserver(
+		// mSettingsContentObserver);
 	}
 
 	@Override
@@ -129,7 +156,7 @@ public class Listener extends Service implements SensorEventListener {
 				float speed = Math.abs(x + y + z - last_x - last_y - last_z)
 						/ diffTime * 1000;
 
-				if (speed > SHAKE_THRESHOLD) {
+				if (speed > shakeThreshold) {
 					vibrate(500);
 					Log.d("osama", "Posting to Facebook");
 
@@ -153,20 +180,18 @@ public class Listener extends Service implements SensorEventListener {
 
 		Intent notificationIntent = new Intent(this, Main.class)
 				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+		PendingIntent mainPendingIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
 
 		Notification notification = new Notification.Builder(this)
-				.setContentTitle("shake-in")
-				.setContentText("I'm ready to shake-in :D")
-				.setContentIntent(pendingIntent)
+				.setContentTitle("shake sensitivity: ")
+				.setContentText("shake-in")
+				.setContentIntent(mainPendingIntent)
 				.setSmallIcon(R.drawable.location_64x64_white)
 				.setLargeIcon(
 						BitmapFactory.decodeResource(getResources(),
 								R.drawable.shake_in)).setAutoCancel(true)
-				// .addAction(R.drawable.ic_launcher, "content I", pIntent)
-				// .addAction(R.drawable.ic_launcher, "content II", pIntent)
-				.build();
+				.setProgress(200, shakeThreshold - 100, false).build();
 
 		// notification.setLatestEventInfo(this, "shake-in",
 		// "I'm ready just shake-in", pendingIntent);

@@ -6,6 +6,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 public class Settings extends PreferenceActivity implements
@@ -37,18 +38,30 @@ public class Settings extends PreferenceActivity implements
 				startService(new Intent(this, Listener.class));
 			} else {
 				// kill the service
-				Toast.makeText(this, "killing the service", Toast.LENGTH_SHORT)
-						.show();
 
 				Intent intent = new Intent(this, Listener.class);
 				stopService(intent);
 			}
-		} else if (key.equals("message")) {
-			Toast.makeText(getBaseContext(), "message changed",
-					Toast.LENGTH_SHORT).show();
 		} else if (key.equals("NFC")) {
 			Toast.makeText(getApplicationContext(),
 					"TODO: disable NFC feature", Toast.LENGTH_SHORT).show();
+		} else if (key.equals("foreground_service")
+				|| key.equals("seekBarPreference")) {
+			// restart the service
+
+			Intent intent = new Intent(this, Listener.class);
+			stopService(intent);
+			startService(intent);
+
+			Log.d("osama", "service restarted");
+
+			// TODO: use HandlerThread and Handler instead of restarting the
+			// service.
+
+			if (key.equals(key.equals("seekBarPreference"))) {
+				Toast.makeText(getApplicationContext(), "the senstivity changed",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 
 	}
