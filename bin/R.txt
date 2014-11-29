@@ -101,6 +101,8 @@ int attr maskedWalletDetailsHeaderTextAppearance 0x7f010088
 int attr maskedWalletDetailsLogoImageType 0x7f01008d
 int attr maskedWalletDetailsLogoTextColor 0x7f01008c
 int attr maskedWalletDetailsTextAppearance 0x7f010087
+int attr maxValue 0x7f0100a3
+int attr minValue 0x7f0100a2
 int attr multi_select 0x7f010095
 int attr navigationMode 0x7f010027
 int attr paddingEnd 0x7f010039
@@ -173,7 +175,7 @@ int bool abc_config_actionMenuItemAllCaps 0x7f060005
 int bool abc_config_allowActionMenuItemTextWithIcon 0x7f060004
 int bool abc_config_showMenuShortcutsWhenKeyboardPresent 0x7f060003
 int bool abc_split_action_bar_is_narrow 0x7f060002
-int color abc_search_url_text_holo 0x7f070021
+int color abc_search_url_text_holo 0x7f070022
 int color abc_search_url_text_normal 0x7f070000
 int color abc_search_url_text_pressed 0x7f070002
 int color abc_search_url_text_selected 0x7f070001
@@ -194,8 +196,9 @@ int color common_signin_btn_light_text_default 0x7f070007
 int color common_signin_btn_light_text_disabled 0x7f070009
 int color common_signin_btn_light_text_focused 0x7f07000a
 int color common_signin_btn_light_text_pressed 0x7f070008
-int color common_signin_btn_text_dark 0x7f070022
-int color common_signin_btn_text_light 0x7f070023
+int color common_signin_btn_text_dark 0x7f070023
+int color common_signin_btn_text_light 0x7f070024
+int color gray_color 0x7f070021
 int color wallet_bright_foreground_disabled_holo_light 0x7f070012
 int color wallet_bright_foreground_holo_dark 0x7f07000d
 int color wallet_bright_foreground_holo_light 0x7f070013
@@ -209,8 +212,8 @@ int color wallet_hint_foreground_holo_dark 0x7f070015
 int color wallet_hint_foreground_holo_light 0x7f070014
 int color wallet_holo_blue_light 0x7f070018
 int color wallet_link_text_light 0x7f070019
-int color wallet_primary_text_holo_light 0x7f070024
-int color wallet_secondary_text_holo_dark 0x7f070025
+int color wallet_primary_text_holo_light 0x7f070025
+int color wallet_secondary_text_holo_dark 0x7f070026
 int dimen abc_action_bar_default_height 0x7f080002
 int dimen abc_action_bar_icon_vertical_padding 0x7f080003
 int dimen abc_action_bar_progress_bar_size 0x7f08000a
@@ -414,7 +417,7 @@ int drawable powered_by_google_dark 0x7f0200a3
 int drawable powered_by_google_light 0x7f0200a4
 int drawable settings_gears 0x7f0200a5
 int drawable shake_in 0x7f0200a6
-int id RelativeLayout1 0x7f0a006a
+int id RelativeLayout1 0x7f0a006e
 int id action_bar 0x7f0a0030
 int id action_bar_activity_content 0x7f0a0001
 int id action_bar_container 0x7f0a002f
@@ -427,12 +430,12 @@ int id action_menu_divider 0x7f0a0002
 int id action_menu_presenter 0x7f0a0003
 int id action_mode_close_button 0x7f0a0038
 int id activity_chooser_view_content 0x7f0a0039
-int id addPlace 0x7f0a0072
+int id addPlace 0x7f0a0076
 int id always 0x7f0a000f
 int id beginning 0x7f0a0016
 int id book_now 0x7f0a0026
-int id btnPost 0x7f0a006f
-int id btnProfilePic 0x7f0a006b
+int id btnPost 0x7f0a0073
+int id btnProfilePic 0x7f0a006f
 int id buyButton 0x7f0a0022
 int id buy_now 0x7f0a0027
 int id buy_with_google 0x7f0a0028
@@ -464,6 +467,7 @@ int id com_facebook_tooltip_bubble_view_top_pointer 0x7f0a0063
 int id com_facebook_usersettingsfragment_login_button 0x7f0a0069
 int id com_facebook_usersettingsfragment_logo_image 0x7f0a0067
 int id com_facebook_usersettingsfragment_profile_name 0x7f0a0068
+int id current_value 0x7f0a006a
 int id default_activity_button 0x7f0a003c
 int id dialog 0x7f0a0014
 int id disableHome 0x7f0a0009
@@ -484,18 +488,20 @@ int id image 0x7f0a003b
 int id large 0x7f0a002c
 int id listMode 0x7f0a0006
 int id list_item 0x7f0a003d
-int id login 0x7f0a006c
+int id login 0x7f0a0070
 int id match_parent 0x7f0a0024
+int id max_value 0x7f0a006d
 int id middle 0x7f0a0018
+int id min_value 0x7f0a006c
 int id monochrome 0x7f0a002b
-int id my_places 0x7f0a0071
+int id my_places 0x7f0a0075
 int id never 0x7f0a0012
 int id none 0x7f0a0019
 int id normal 0x7f0a0007
 int id picker_subtitle 0x7f0a005f
 int id production 0x7f0a001f
-int id profilePic 0x7f0a006d
-int id progress 0x7f0a0070
+int id profilePic 0x7f0a0071
+int id progress 0x7f0a0074
 int id progress_circular 0x7f0a0004
 int id progress_horizontal 0x7f0a0005
 int id radio 0x7f0a0043
@@ -511,8 +517,9 @@ int id search_mag_icon 0x7f0a0049
 int id search_plate 0x7f0a004a
 int id search_src_text 0x7f0a004b
 int id search_voice_btn 0x7f0a004f
+int id seek_bar 0x7f0a006b
 int id selectionDetails 0x7f0a0023
-int id settings 0x7f0a006e
+int id settings 0x7f0a0072
 int id shortcut 0x7f0a0042
 int id showCustom 0x7f0a000b
 int id showHome 0x7f0a000c
@@ -523,7 +530,7 @@ int id strict_sandbox 0x7f0a0021
 int id submit_area 0x7f0a004d
 int id tabMode 0x7f0a0008
 int id terrain 0x7f0a001c
-int id testText 0x7f0a0073
+int id testText 0x7f0a0077
 int id title 0x7f0a003f
 int id top_action_bar 0x7f0a0034
 int id up 0x7f0a0035
@@ -572,12 +579,13 @@ int layout com_facebook_placepickerfragment_list_row 0x7f030024
 int layout com_facebook_search_bar_layout 0x7f030025
 int layout com_facebook_tooltip_bubble 0x7f030026
 int layout com_facebook_usersettingsfragment 0x7f030027
-int layout main 0x7f030028
-int layout post 0x7f030029
-int layout simple_list 0x7f03002a
-int layout support_simple_spinner_dropdown_item 0x7f03002b
-int layout test 0x7f03002c
-int layout testii 0x7f03002d
+int layout dialog_slider 0x7f030028
+int layout main 0x7f030029
+int layout post 0x7f03002a
+int layout simple_list 0x7f03002b
+int layout support_simple_spinner_dropdown_item 0x7f03002c
+int layout test 0x7f03002d
+int layout testii 0x7f03002e
 int string GPSWaning 0x7f0b0052
 int string GPSWarning_desc 0x7f0b0051
 int string NFC_summary 0x7f0b0045
@@ -652,13 +660,18 @@ int string common_signin_button_text 0x7f0b0024
 int string common_signin_button_text_long 0x7f0b0025
 int string default_message 0x7f0b0049
 int string default_message_desc 0x7f0b004a
+int string dialog_title 0x7f0b0055
 int string enable_NFC 0x7f0b0044
 int string enable_gestures 0x7f0b0046
+int string foreground_service_desc 0x7f0b0054
+int string foreground_service_title 0x7f0b0053
 int string gesture_summary 0x7f0b0047
 int string login 0x7f0b004d
 int string logout 0x7f0b004e
 int string post_desc 0x7f0b0050
 int string profile_pic 0x7f0b0043
+int string shake_sensitivity_desc 0x7f0b0057
+int string shake_sensitivity_title 0x7f0b0056
 int string test 0x7f0b004f
 int string wallet_buy_button_place_holder 0x7f0b0026
 int style AppBaseTheme 0x7f0c0093
@@ -959,6 +972,9 @@ int styleable WalletFragmentStyle_maskedWalletDetailsHeaderTextAppearance 5
 int styleable WalletFragmentStyle_maskedWalletDetailsLogoImageType 10
 int styleable WalletFragmentStyle_maskedWalletDetailsLogoTextColor 9
 int styleable WalletFragmentStyle_maskedWalletDetailsTextAppearance 4
+int[] styleable com_osama_shake_in_SeekBarPreference { 0x7f0100a2, 0x7f0100a3 }
+int styleable com_osama_shake_in_SeekBarPreference_maxValue 1
+int styleable com_osama_shake_in_SeekBarPreference_minValue 0
 int[] styleable com_facebook_friend_picker_fragment { 0x7f010095 }
 int styleable com_facebook_friend_picker_fragment_multi_select 0
 int[] styleable com_facebook_login_view { 0x7f01009a, 0x7f01009b, 0x7f01009c, 0x7f01009d }

@@ -19,6 +19,7 @@ import android.util.Log;
 //import android.os.HandlerThread;
 //import android.os.Looper;
 //import android.os.Message;
+import android.widget.Toast;
 
 //  TODO: listen for the motion around the z axis only and you may add a custom gesture
 //  TODO: handle sending repeated events
@@ -29,7 +30,8 @@ public class Listener extends Service implements SensorEventListener {
 	private Sensor accelerometer;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
-	private static final int SHAKE_THRESHOLD = 193;
+	private int shakeThreshold;
+	private static final int DEFAULT_SHAKE_THRESHOLD = 193;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
 
 	// private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -69,6 +71,12 @@ public class Listener extends Service implements SensorEventListener {
 
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
+
+		shakeThreshold = sharedPreferences.getInt("seekBarPreference",
+				DEFAULT_SHAKE_THRESHOLD);
+		Toast.makeText(getApplicationContext(),
+				"shake senstivity : " + shakeThreshold, Toast.LENGTH_SHORT)
+				.show();
 		if (sharedPreferences.getBoolean("foreground_service", true)) {
 			startForeground();
 		}
@@ -136,7 +144,7 @@ public class Listener extends Service implements SensorEventListener {
 				float speed = Math.abs(x + y + z - last_x - last_y - last_z)
 						/ diffTime * 1000;
 
-				if (speed > SHAKE_THRESHOLD) {
+				if (speed > shakeThreshold) {
 					vibrate(500);
 					Log.d("osama", "Posting to Facebook");
 
@@ -160,19 +168,23 @@ public class Listener extends Service implements SensorEventListener {
 
 		Intent notificationIntent = new Intent(this, Main.class)
 				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+		Intent sensitivityIntent = new Intent(this, SeekBarPreference.class)
+				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent mainPendingIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
+		PendingIntent sensitivityPendingIntent = PendingIntent.getActivity(this, 0,
+				sensitivityIntent, 0);
 
 		Notification notification = new Notification.Builder(this)
 				.setContentTitle("shake-in")
-				.setContentText("I'm ready to shake-in :D")
-				.setContentIntent(pendingIntent)
+				.setContentText("shake sensitivity: ")
+				.setContentIntent(mainPendingIntent)
 				.setSmallIcon(R.drawable.location_64x64_white)
 				.setLargeIcon(
 						BitmapFactory.decodeResource(getResources(),
 								R.drawable.shake_in)).setAutoCancel(true)
-				// .addAction(R.drawable.ic_launcher, "content I", pIntent)
-				// .addAction(R.drawable.ic_launcher, "content II", pIntent)
+				.setProgress(200, shakeThreshold - 100, false)
+				.addAction(R.drawable.settings_gears, "change", sensitivityPendingIntent)
 				.build();
 
 		// notification.setLatestEventInfo(this, "shake-in",

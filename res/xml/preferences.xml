@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:example="http://schemas.android.com/apk/res/com.osama.shake_in" >
 
     <EditTextPreference
         android:defaultValue="I was there :)"
@@ -11,11 +12,15 @@
         android:summary="@string/default_message_desc"
         android:title="@string/default_message" />
 
-    <SeekBarPreference
-        android:defaultValue="193"
-        android:key="seekBar"
-        android:title="Set the default time" >
-    </SeekBarPreference>
+    <com.osama.shake_in.SeekBarPreference
+        android:key="seekBarPreference"
+	    android:dialogTitle="@string/dialog_title"
+	    android:title="@string/shake_sensitivity_title"
+	    android:summary="@string/shake_sensitivity_desc"
+	    android:persistent="true"
+	    android:defaultValue="193"
+	    example:minValue="100"
+	    example:maxValue="300" />
 
     <CheckBoxPreference
         android:defaultValue="true"

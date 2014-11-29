@@ -777,6 +777,22 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int maskedWalletDetailsTextAppearance=0x7f010087;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int maxValue=0x7f0100a3;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int minValue=0x7f0100a2;
         /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -1334,7 +1350,7 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070021;
+        public static final int abc_search_url_text_holo=0x7f070022;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
@@ -1357,8 +1373,9 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f070009;
         public static final int common_signin_btn_light_text_focused=0x7f07000a;
         public static final int common_signin_btn_light_text_pressed=0x7f070008;
-        public static final int common_signin_btn_text_dark=0x7f070022;
-        public static final int common_signin_btn_text_light=0x7f070023;
+        public static final int common_signin_btn_text_dark=0x7f070023;
+        public static final int common_signin_btn_text_light=0x7f070024;
+        public static final int gray_color=0x7f070021;
         public static final int wallet_bright_foreground_disabled_holo_light=0x7f070012;
         /** 
          Wallet colors to support consistent Wallet fragment holo dark UI in client application
@@ -1377,8 +1394,8 @@ containing a value of this type.
         public static final int wallet_hint_foreground_holo_light=0x7f070014;
         public static final int wallet_holo_blue_light=0x7f070018;
         public static final int wallet_link_text_light=0x7f070019;
-        public static final int wallet_primary_text_holo_light=0x7f070024;
-        public static final int wallet_secondary_text_holo_dark=0x7f070025;
+        public static final int wallet_primary_text_holo_light=0x7f070025;
+        public static final int wallet_secondary_text_holo_dark=0x7f070026;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -1682,7 +1699,7 @@ containing a value of this type.
         public static final int shake_in=0x7f0200a6;
     }
     public static final class id {
-        public static final int RelativeLayout1=0x7f0a006a;
+        public static final int RelativeLayout1=0x7f0a006e;
         public static final int action_bar=0x7f0a0030;
         public static final int action_bar_activity_content=0x7f0a0001;
         public static final int action_bar_container=0x7f0a002f;
@@ -1695,12 +1712,12 @@ containing a value of this type.
         public static final int action_menu_presenter=0x7f0a0003;
         public static final int action_mode_close_button=0x7f0a0038;
         public static final int activity_chooser_view_content=0x7f0a0039;
-        public static final int addPlace=0x7f0a0072;
+        public static final int addPlace=0x7f0a0076;
         public static final int always=0x7f0a000f;
         public static final int beginning=0x7f0a0016;
         public static final int book_now=0x7f0a0026;
-        public static final int btnPost=0x7f0a006f;
-        public static final int btnProfilePic=0x7f0a006b;
+        public static final int btnPost=0x7f0a0073;
+        public static final int btnProfilePic=0x7f0a006f;
         public static final int buyButton=0x7f0a0022;
         public static final int buy_now=0x7f0a0027;
         public static final int buy_with_google=0x7f0a0028;
@@ -1732,6 +1749,7 @@ containing a value of this type.
         public static final int com_facebook_usersettingsfragment_login_button=0x7f0a0069;
         public static final int com_facebook_usersettingsfragment_logo_image=0x7f0a0067;
         public static final int com_facebook_usersettingsfragment_profile_name=0x7f0a0068;
+        public static final int current_value=0x7f0a006a;
         public static final int default_activity_button=0x7f0a003c;
         public static final int dialog=0x7f0a0014;
         public static final int disableHome=0x7f0a0009;
@@ -1752,18 +1770,20 @@ containing a value of this type.
         public static final int large=0x7f0a002c;
         public static final int listMode=0x7f0a0006;
         public static final int list_item=0x7f0a003d;
-        public static final int login=0x7f0a006c;
+        public static final int login=0x7f0a0070;
         public static final int match_parent=0x7f0a0024;
+        public static final int max_value=0x7f0a006d;
         public static final int middle=0x7f0a0018;
+        public static final int min_value=0x7f0a006c;
         public static final int monochrome=0x7f0a002b;
-        public static final int my_places=0x7f0a0071;
+        public static final int my_places=0x7f0a0075;
         public static final int never=0x7f0a0012;
         public static final int none=0x7f0a0019;
         public static final int normal=0x7f0a0007;
         public static final int picker_subtitle=0x7f0a005f;
         public static final int production=0x7f0a001f;
-        public static final int profilePic=0x7f0a006d;
-        public static final int progress=0x7f0a0070;
+        public static final int profilePic=0x7f0a0071;
+        public static final int progress=0x7f0a0074;
         public static final int progress_circular=0x7f0a0004;
         public static final int progress_horizontal=0x7f0a0005;
         public static final int radio=0x7f0a0043;
@@ -1779,8 +1799,9 @@ containing a value of this type.
         public static final int search_plate=0x7f0a004a;
         public static final int search_src_text=0x7f0a004b;
         public static final int search_voice_btn=0x7f0a004f;
+        public static final int seek_bar=0x7f0a006b;
         public static final int selectionDetails=0x7f0a0023;
-        public static final int settings=0x7f0a006e;
+        public static final int settings=0x7f0a0072;
         public static final int shortcut=0x7f0a0042;
         public static final int showCustom=0x7f0a000b;
         public static final int showHome=0x7f0a000c;
@@ -1791,7 +1812,7 @@ containing a value of this type.
         public static final int submit_area=0x7f0a004d;
         public static final int tabMode=0x7f0a0008;
         public static final int terrain=0x7f0a001c;
-        public static final int testText=0x7f0a0073;
+        public static final int testText=0x7f0a0077;
         public static final int title=0x7f0a003f;
         public static final int top_action_bar=0x7f0a0034;
         public static final int up=0x7f0a0035;
@@ -1866,12 +1887,13 @@ containing a value of this type.
         public static final int com_facebook_search_bar_layout=0x7f030025;
         public static final int com_facebook_tooltip_bubble=0x7f030026;
         public static final int com_facebook_usersettingsfragment=0x7f030027;
-        public static final int main=0x7f030028;
-        public static final int post=0x7f030029;
-        public static final int simple_list=0x7f03002a;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002b;
-        public static final int test=0x7f03002c;
-        public static final int testii=0x7f03002d;
+        public static final int dialog_slider=0x7f030028;
+        public static final int main=0x7f030029;
+        public static final int post=0x7f03002a;
+        public static final int simple_list=0x7f03002b;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002c;
+        public static final int test=0x7f03002d;
+        public static final int testii=0x7f03002e;
     }
     public static final class string {
         public static final int GPSWaning=0x7f0b0052;
@@ -2039,13 +2061,18 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f0b0025;
         public static final int default_message=0x7f0b0049;
         public static final int default_message_desc=0x7f0b004a;
+        public static final int dialog_title=0x7f0b0055;
         public static final int enable_NFC=0x7f0b0044;
         public static final int enable_gestures=0x7f0b0046;
+        public static final int foreground_service_desc=0x7f0b0054;
+        public static final int foreground_service_title=0x7f0b0053;
         public static final int gesture_summary=0x7f0b0047;
         public static final int login=0x7f0b004d;
         public static final int logout=0x7f0b004e;
         public static final int post_desc=0x7f0b0050;
         public static final int profile_pic=0x7f0b0043;
+        public static final int shake_sensitivity_desc=0x7f0b0057;
+        public static final int shake_sensitivity_title=0x7f0b0056;
         public static final int test=0x7f0b004f;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
@@ -4619,6 +4646,49 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           @attr name com.osama.shake_in:maskedWalletDetailsTextAppearance
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsTextAppearance = 4;
+        /** Attributes that can be used with a com_osama_shake_in_SeekBarPreference.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #com_osama_shake_in_SeekBarPreference_maxValue com.osama.shake_in:maxValue}</code></td><td></td></tr>
+           <tr><td><code>{@link #com_osama_shake_in_SeekBarPreference_minValue com.osama.shake_in:minValue}</code></td><td></td></tr>
+           </table>
+           @see #com_osama_shake_in_SeekBarPreference_maxValue
+           @see #com_osama_shake_in_SeekBarPreference_minValue
+         */
+        public static final int[] com_osama_shake_in_SeekBarPreference = {
+            0x7f0100a2, 0x7f0100a3
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.osama.shake_in.R.attr#maxValue}
+          attribute's value can be found in the {@link #com_osama_shake_in_SeekBarPreference} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.osama.shake_in:maxValue
+        */
+        public static final int com_osama_shake_in_SeekBarPreference_maxValue = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.osama.shake_in.R.attr#minValue}
+          attribute's value can be found in the {@link #com_osama_shake_in_SeekBarPreference} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.osama.shake_in:minValue
+        */
+        public static final int com_osama_shake_in_SeekBarPreference_minValue = 0;
         /** Attributes that can be used with a com_facebook_friend_picker_fragment.
            <p>Includes the following attributes:</p>
            <table>
