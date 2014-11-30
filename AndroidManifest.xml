@@ -4,7 +4,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,7 +30,8 @@
         </activity>
         <activity
             android:name="com.osama.shake_in.Post"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog" >
+            android:theme="@android:style/Theme.DeviceDefault.Dialog"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
