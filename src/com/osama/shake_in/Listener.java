@@ -11,31 +11,31 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 //import android.os.Handler;
 //import android.os.HandlerThread;
 //import android.os.Looper;
 //import android.os.Message;
-import android.widget.Toast;
 
 //  TODO: listen for the motion around the z axis only and you may add a custom gesture
 //  TODO: handle sending repeated events
 public class Listener extends Service implements SensorEventListener {
-	// private Looper mServiceLooper;
-	// private ServiceHandler mServiceHandler;
 	private SensorManager sensorManager;
 	private Sensor accelerometer;
-	// private SettingsContentObserver mSettingsContentObserver;
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
 	private int shakeThreshold = 193;
 	private static final int DEFAULT_SHAKE_THRESHOLD = 193;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
+	private static final int MIN = 100;
 
+	// private Looper mServiceLooper;
+	// private ServiceHandler mServiceHandler;
+	// private SettingsContentObserver mSettingsContentObserver;
 	// private final BroadcastReceiver receiver = new BroadcastReceiver() {
 	// @Override
 	// public void onReceive(Context context, Intent intent) {
@@ -82,12 +82,9 @@ public class Listener extends Service implements SensorEventListener {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		// shakeThreshold = sharedPreferences.getInt("seekBarPreference",
-		// DEFAULT_SHAKE_THRESHOLD);
+		shakeThreshold = sharedPreferences.getInt("sensitivity",
+				DEFAULT_SHAKE_THRESHOLD) + MIN;
 
-		Toast.makeText(getApplicationContext(),
-				"shake senstivity : " + shakeThreshold, Toast.LENGTH_SHORT)
-				.show();
 		if (sharedPreferences.getBoolean("foreground_service", true)) {
 			startForeground();
 		}
@@ -141,6 +138,8 @@ public class Listener extends Service implements SensorEventListener {
 	public void onSensorChanged(SensorEvent sensorEvent) {
 		Sensor mySensor = sensorEvent.sensor;
 
+		// TODO: remove unnecessary variables.
+
 		if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			long curTime = System.currentTimeMillis();
 			if ((curTime - lastUpdate) > 100) {
@@ -184,14 +183,14 @@ public class Listener extends Service implements SensorEventListener {
 				notificationIntent, 0);
 
 		Notification notification = new Notification.Builder(this)
-				.setContentTitle("shake sensitivity: ")
+				.setContentTitle("shake sensitivity ")
 				.setContentText("shake-in")
 				.setContentIntent(mainPendingIntent)
 				.setSmallIcon(R.drawable.location_64x64_white)
 				.setLargeIcon(
 						BitmapFactory.decodeResource(getResources(),
 								R.drawable.shake_in)).setAutoCancel(true)
-				.setProgress(200, shakeThreshold - 100, false).build();
+				.setProgress(200, shakeThreshold - MIN, false).build();
 
 		// notification.setLatestEventInfo(this, "shake-in",
 		// "I'm ready just shake-in", pendingIntent);

@@ -107,22 +107,22 @@ public class Post extends ListActivity implements
 
 		// check for GPS
 		final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext());
-			if (sharedPreferences.getBoolean("GPSWarning", true)) {
-				buildAlertMessageNoGps();
-			}
-		}
-
 		googleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(LocationServices.API).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).build();
 
-		prepareNFC();
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
 
+		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+			if (sharedPreferences.getBoolean("GPSWarning", true)) {
+				buildAlertMessageNoGps();
+			}
+		}
+		if (sharedPreferences.getBoolean("NFC", true)) {
+			prepareNFC();
+		}
 		uiHelper = new UiLifecycleHelper(this, callBack);
 		uiHelper.onCreate(savedInstanceState);
 
@@ -467,24 +467,19 @@ public class Post extends ListActivity implements
 	}
 
 	private void prepareNFC() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		boolean nfcEnabled = sharedPreferences.getBoolean("NFC", true);
 
-		if (nfcEnabled) {
-			nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-			if (nfcAdapter == null) {
-				// TODO: try to enable NFC!!
+		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (nfcAdapter == null) {
+			// TODO: try to enable NFC!!
 
-				Toast.makeText(getApplicationContext(), "please enable NFC!",
-						Toast.LENGTH_LONG).show();
-			} else {
-				nfcAdapter.setNdefPushMessageCallback(this, this);
-				nfcAdapter.setOnNdefPushCompleteCallback(this, this);
+			Toast.makeText(getApplicationContext(), "please enable NFC!",
+					Toast.LENGTH_LONG).show();
+		} else {
+			nfcAdapter.setNdefPushMessageCallback(this, this);
+			nfcAdapter.setOnNdefPushCompleteCallback(this, this);
 
-				Toast.makeText(getApplicationContext(), "NFC adapter is ready",
-						Toast.LENGTH_LONG).show();
-			}
+			Toast.makeText(getApplicationContext(), "NFC adapter is ready",
+					Toast.LENGTH_LONG).show();
 		}
 	}
 

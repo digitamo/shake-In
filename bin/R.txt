@@ -580,10 +580,11 @@ int layout com_facebook_usersettingsfragment 0x7f030027
 int layout dialog_slider 0x7f030028
 int layout main 0x7f030029
 int layout post 0x7f03002a
-int layout simple_list 0x7f03002b
-int layout support_simple_spinner_dropdown_item 0x7f03002c
-int layout test 0x7f03002d
-int layout testii 0x7f03002e
+int layout seekbar_preference 0x7f03002b
+int layout simple_list 0x7f03002c
+int layout support_simple_spinner_dropdown_item 0x7f03002d
+int layout test 0x7f03002e
+int layout testii 0x7f03002f
 int string GPSWaning 0x7f0b0052
 int string GPSWarning_desc 0x7f0b0051
 int string NFC_summary 0x7f0b0045

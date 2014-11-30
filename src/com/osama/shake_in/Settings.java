@@ -32,21 +32,18 @@ public class Settings extends PreferenceActivity implements
 		if (key.equals("gesture")) {
 			if (sharedPreferences.getBoolean("gesture", true)) {
 				// start the service
-				Toast.makeText(this, "starting the service", Toast.LENGTH_SHORT)
-						.show();
-
+				Log.d("osama", "starting the service");
 				startService(new Intent(this, Listener.class));
+				
+				
 			} else {
 				// kill the service
 
 				Intent intent = new Intent(this, Listener.class);
 				stopService(intent);
 			}
-		} else if (key.equals("NFC")) {
-			Toast.makeText(getApplicationContext(),
-					"TODO: disable NFC feature", Toast.LENGTH_SHORT).show();
 		} else if (key.equals("foreground_service")
-				|| key.equals("seekBarPreference")) {
+				|| key.equals("sensitivity")) {
 			// restart the service
 
 			Intent intent = new Intent(this, Listener.class);
@@ -58,9 +55,9 @@ public class Settings extends PreferenceActivity implements
 			// TODO: use HandlerThread and Handler instead of restarting the
 			// service.
 
-			if (key.equals(key.equals("seekBarPreference"))) {
-				Toast.makeText(getApplicationContext(), "the senstivity changed",
-						Toast.LENGTH_SHORT).show();
+			if (key.equals(key.equals("sensitivity"))) {
+				Toast.makeText(getApplicationContext(),
+						"the senstivity changed", Toast.LENGTH_SHORT).show();
 			}
 		}
 

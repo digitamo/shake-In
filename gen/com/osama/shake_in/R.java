@@ -1874,10 +1874,11 @@ containing a value of this type.
         public static final int dialog_slider=0x7f030028;
         public static final int main=0x7f030029;
         public static final int post=0x7f03002a;
-        public static final int simple_list=0x7f03002b;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002c;
-        public static final int test=0x7f03002d;
-        public static final int testii=0x7f03002e;
+        public static final int seekbar_preference=0x7f03002b;
+        public static final int simple_list=0x7f03002c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002d;
+        public static final int test=0x7f03002e;
+        public static final int testii=0x7f03002f;
     }
     public static final class string {
         public static final int GPSWaning=0x7f0b0052;

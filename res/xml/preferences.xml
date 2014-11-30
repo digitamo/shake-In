@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <EditTextPreference
-        android:defaultValue="I was there :)"
-        android:dialogIcon="@drawable/edit_text"
-        android:dialogTitle="message"
-        android:key="message"
-        android:negativeButtonText="Cancel"
-        android:positiveButtonText="Ok"
-        android:summary="@string/default_message_desc"
-        android:title="@string/default_message" />
+    <PreferenceCategory android:title="Message" >
+        <EditTextPreference
+            android:defaultValue="I was there :)"
+            android:dialogIcon="@drawable/edit_text"
+            android:dialogTitle="message"
+            android:key="message"
+            android:negativeButtonText="Cancel"
+            android:positiveButtonText="Ok"
+            android:summary="@string/default_message_desc"
+            android:title="@string/default_message" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="Gesture" >
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="gesture"
         android:summary="@string/gesture_summary"
         android:title="@string/enable_gestures" />
+
+    <com.osama.shake_in.SeekBarPreference
+        android:defaultValue="193"
+        android:dependency="gesture"
+        android:key="sensitivity"
+        android:summary="@string/shake_sensitivity_desc"
+        android:title="@string/shake_sensitivity_title" />
+
     <CheckBoxPreference
         android:defaultValue="true"
+        android:dependency="gesture"
         android:key="foreground_service"
         android:summary="@string/foreground_service_desc"
         android:title="@string/foreground_service_title" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Others" >
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="GPSWarning"
@@ -36,5 +51,5 @@
         android:key="auto_login"
         android:summary="@string/auto_login_desc"
         android:title="@string/auto_login" />
-
+</PreferenceCategory>
 </PreferenceScreen>

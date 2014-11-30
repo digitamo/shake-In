@@ -1,4 +1,4 @@
-package com.osama.shake_in;
+package test;
 
 import java.security.MessageDigest;
 
@@ -23,6 +23,8 @@ import com.facebook.model.GraphObject;
 import com.facebook.model.OpenGraphAction;
 import com.facebook.model.OpenGraphObject;
 import com.facebook.widget.FacebookDialog;
+import com.osama.shake_in.R;
+import com.osama.shake_in.R.layout;
 
 /**
  * 
