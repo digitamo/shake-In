@@ -61,6 +61,7 @@ public class Post extends ListActivity implements
 	private LocationRequest locationRequest;
 	private String id;
 	private String userName;
+	// TODO: support multiple tags
 	private String friendId;
 	private NfcAdapter nfcAdapter;
 	private GoogleApiClient googleApiClient;
@@ -228,6 +229,61 @@ public class Post extends ListActivity implements
 	}
 
 	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		if (myPlaces) {
+			if (myPlacesData != null) {
+				try {
+					// String objectId = myPlacesData.getJSONObject(position)
+					// .getString("id");
+
+					String placeId = myPlacesData.getJSONObject(position)
+							.getString("id");
+
+					postOldPlace(placeId);
+					// counter.cancel();
+					finish();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				Log.e("osama", "myPlacesData was null!!");
+			}
+		} else {
+			try {
+				if (data != null) {
+					String placeId = data.getJSONObject(position).getString(
+							"id");
+					post(placeId);
+					Toast.makeText(
+							this,
+							"posting check-in at: "
+									+ data.getJSONObject(position).getString(
+											"name"), Toast.LENGTH_SHORT).show();
+					// counter.cancel();
+					finish();
+				} else {
+					Log.e("osama", "the data was null!!");
+				}
+			} catch (JSONException e) {
+				Log.e("osama", "error parsing JSON!!");
+			}
+		}
+	}
+
+	protected void onSessionStateChange(Session session, SessionState state,
+			Exception exception) {
+		if (state.isOpened()) {
+			Toast.makeText(getBaseContext(), "logged in :)", Toast.LENGTH_SHORT)
+					.show();
+		} else {
+			Toast.makeText(getBaseContext(), "you're logged out :(",
+					Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
+	@Override
 	public void onConnected(Bundle connectionHint) {
 		// create a Location Request
 		locationRequest = LocationRequest.create()
@@ -381,15 +437,15 @@ public class Post extends ListActivity implements
 
 		final String stringOut = id;
 		// final String stringOut = "this is ID";
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				Toast.makeText(getApplicationContext(), stringOut,
-						Toast.LENGTH_LONG).show();
-			}
-		});
+		// runOnUiThread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// Toast.makeText(getApplicationContext(), stringOut,
+		// Toast.LENGTH_LONG).show();
+		// }
+		// });
 
 		byte[] bytesOut = stringOut.getBytes();
 
@@ -399,65 +455,7 @@ public class Post extends ListActivity implements
 
 		NdefMessage ndefMessageout = new NdefMessage(ndefRecords);
 
-		Log.d("osama", ndefMessageout.toString());
 		return ndefMessageout;
-	}
-
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		if (myPlaces) {
-			if (myPlacesData != null) {
-				try {
-					// String objectId = myPlacesData.getJSONObject(position)
-					// .getString("id");
-
-					String placeId = myPlacesData.getJSONObject(position)
-							.getString("id");
-
-					postOldPlace(placeId);
-					// counter.cancel();
-					finish();
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			} else {
-				Log.e("osama", "myPlacesData was null!!");
-				Toast.makeText(getApplicationContext(),
-						"myPlacesData was null!!", Toast.LENGTH_SHORT).show();
-			}
-		} else {
-			try {
-				if (data != null) {
-					String placeId = data.getJSONObject(position).getString(
-							"id");
-					post(placeId);
-					Toast.makeText(
-							this,
-							"posting check-in at: "
-									+ data.getJSONObject(position).getString(
-											"name"), Toast.LENGTH_SHORT).show();
-					// counter.cancel();
-					finish();
-				} else {
-					Log.e("osama", "the data was null!!");
-				}
-			} catch (JSONException e) {
-				Log.e("osama", "error parsing JSON!!");
-			}
-		}
-	}
-
-	protected void onSessionStateChange(Session session, SessionState state,
-			Exception exception) {
-		if (state.isOpened()) {
-			Toast.makeText(getBaseContext(), "logged in :)", Toast.LENGTH_SHORT)
-					.show();
-		} else {
-			Toast.makeText(getBaseContext(), "you're logged out :(",
-					Toast.LENGTH_SHORT).show();
-		}
-
 	}
 
 	private boolean isInternetActive() {
@@ -478,8 +476,8 @@ public class Post extends ListActivity implements
 			nfcAdapter.setNdefPushMessageCallback(this, this);
 			nfcAdapter.setOnNdefPushCompleteCallback(this, this);
 
-			Toast.makeText(getApplicationContext(), "NFC adapter is ready",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(),
+					"use NFC to tag your friend", Toast.LENGTH_LONG).show();
 		}
 	}
 

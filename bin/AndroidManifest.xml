@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.osama.shake_in"
-    android:versionCode="1"
+    android:versionCode="3"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.NFC" />
 
-    <uses-feature android:name="android.hardware.sensor.acceleromotor" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" />
 
     <application
         android:allowBackup="true"
@@ -30,17 +30,14 @@
         </activity>
         <activity
             android:name="com.osama.shake_in.Post"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data
-                    android:host="com.osama.shake_in"
-                    android:pathPrefix="/"
-                    android:scheme="id" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
         <activity

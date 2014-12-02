@@ -18,7 +18,7 @@ public class SeekBarPreference extends Preference implements
 
 	private final int MAX = 500;
 	private final int MIN = 100;
-	private final int DEFAULT_CURRENT_VALUE = 193;
+	private final int DEFAULT_CURRENT_VALUE = 93;
 
 	private int currentValue;
 	private TextView txtCurrentValue;
@@ -57,7 +57,7 @@ public class SeekBarPreference extends Preference implements
 		bar.setOnSeekBarChangeListener(this);
 
 		this.txtCurrentValue = (TextView) view.findViewById(R.id.current_value);
-		txtCurrentValue.setText("Sensitivity: " + String.valueOf(currentValue + MIN));
+		txtCurrentValue.setText(String.valueOf(currentValue + MIN));
 
 		this.txtMaxValue = (TextView) view.findViewById(R.id.max_value);
 		this.txtMaxValue.setText(String.valueOf(MAX));
