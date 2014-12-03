@@ -378,18 +378,21 @@ public class Post extends ListActivity implements
 
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent event) {
+		if (friendId != null) {
+			id = id + "," + friendId;
+		}
 
 		final String stringOut = id;
 		// final String stringOut = "this is ID";
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				Toast.makeText(getApplicationContext(), stringOut,
-						Toast.LENGTH_LONG).show();
-			}
-		});
+		// runOnUiThread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// Toast.makeText(getApplicationContext(), stringOut,
+		// Toast.LENGTH_LONG).show();
+		// }
+		// });
 
 		byte[] bytesOut = stringOut.getBytes();
 
@@ -423,8 +426,6 @@ public class Post extends ListActivity implements
 				}
 			} else {
 				Log.e("osama", "myPlacesData was null!!");
-				Toast.makeText(getApplicationContext(),
-						"myPlacesData was null!!", Toast.LENGTH_SHORT).show();
 			}
 		} else {
 			try {
@@ -478,8 +479,8 @@ public class Post extends ListActivity implements
 			nfcAdapter.setNdefPushMessageCallback(this, this);
 			nfcAdapter.setOnNdefPushCompleteCallback(this, this);
 
-			Toast.makeText(getApplicationContext(), "NFC adapter is ready",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(),
+					"use NFC to tag your friend", Toast.LENGTH_LONG).show();
 		}
 	}
 

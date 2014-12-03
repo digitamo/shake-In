@@ -15,7 +15,6 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 //import android.os.Handler;
 //import android.os.HandlerThread;
 //import android.os.Looper;
@@ -29,7 +28,8 @@ public class Listener extends Service implements SensorEventListener {
 	private long lastUpdate = 0;
 	private float last_x, last_y, last_z;
 	private int shakeThreshold = 193;
-	private static final int DEFAULT_SHAKE_THRESHOLD = 193;
+	private static final int MAX = 500;
+	private static final int DEFAULT_SHAKE_THRESHOLD = 93;
 	private static final int ONGOING_NOTIFICATION_ID = 39;
 	private static final int MIN = 100;
 
@@ -138,7 +138,7 @@ public class Listener extends Service implements SensorEventListener {
 	public void onSensorChanged(SensorEvent sensorEvent) {
 		Sensor mySensor = sensorEvent.sensor;
 
-		// TODO: remove unnecessary variables.
+		// TODO: if motion in the other axis is detected exit.
 
 		if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			long curTime = System.currentTimeMillis();
@@ -190,7 +190,7 @@ public class Listener extends Service implements SensorEventListener {
 				.setLargeIcon(
 						BitmapFactory.decodeResource(getResources(),
 								R.drawable.shake_in)).setAutoCancel(true)
-				.setProgress(200, shakeThreshold - MIN, false).build();
+				.setProgress(MAX  - MIN, shakeThreshold - MIN, false).build();
 
 		// notification.setLatestEventInfo(this, "shake-in",
 		// "I'm ready just shake-in", pendingIntent);

@@ -3,26 +3,22 @@ package com.osama.shake_in;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class SeekBarPreference extends Preference implements
 		OnSeekBarChangeListener {
 
-	private final int MAX = 300;
+	private final int MAX = 500;
 	private final int MIN = 100;
-	private final int DEFAULT_CURRENT_VALUE = 193;
+	private final int DEFAULT_CURRENT_VALUE = 93;
 
 	private int currentValue;
 	private TextView txtCurrentValue;
@@ -61,7 +57,7 @@ public class SeekBarPreference extends Preference implements
 		bar.setOnSeekBarChangeListener(this);
 
 		this.txtCurrentValue = (TextView) view.findViewById(R.id.current_value);
-		txtCurrentValue.setText("Sensitivity: " + String.valueOf(currentValue));
+		txtCurrentValue.setText(String.valueOf(currentValue + MIN));
 
 		this.txtMaxValue = (TextView) view.findViewById(R.id.max_value);
 		this.txtMaxValue.setText(String.valueOf(MAX));
