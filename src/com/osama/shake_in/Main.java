@@ -1,6 +1,7 @@
 package com.osama.shake_in;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -22,13 +27,13 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -92,6 +97,8 @@ public class Main extends Activity {
 			reverseSessionState();
 			Log.d("osama", "auto login = true");
 		}
+
+		// getHasKey();
 
 		if (serviceEnabled()) {
 			startService(new Intent(Main.this, Listener.class));
@@ -372,9 +379,9 @@ public class Main extends Activity {
 		reverseSessionState();
 	}
 
-	public void testObjectAPIOnClick(View view) {
-		startActivity(new Intent(this, TestII.class));
-	}
+	// public void testObjectAPIOnClick(View view) {
+	// startActivity(new Intent(this, TestII.class));
+	// }
 
 	// public void testShareDialogOnClick(View view) {
 	// Intent intent = new Intent(this, Test.class);

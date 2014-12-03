@@ -107,22 +107,22 @@ public class Post extends ListActivity implements
 
 		// check for GPS
 		final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext());
-			if (sharedPreferences.getBoolean("GPSWarning", true)) {
-				buildAlertMessageNoGps();
-			}
-		}
-
 		googleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(LocationServices.API).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).build();
 
-		prepareNFC();
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
 
+		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+			if (sharedPreferences.getBoolean("GPSWarning", true)) {
+				buildAlertMessageNoGps();
+			}
+		}
+		if (sharedPreferences.getBoolean("NFC", true)) {
+			prepareNFC();
+		}
 		uiHelper = new UiLifecycleHelper(this, callBack);
 		uiHelper.onCreate(savedInstanceState);
 
@@ -231,7 +231,7 @@ public class Post extends ListActivity implements
 	public void onConnected(Bundle connectionHint) {
 		// create a Location Request
 		locationRequest = LocationRequest.create()
-				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+				.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
 				.setInterval(1000);
 
 		LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -378,25 +378,29 @@ public class Post extends ListActivity implements
 
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent event) {
+		if (friendId != null) {
+			id = id + "," + friendId;
+		}
 
 		final String stringOut = id;
 		// final String stringOut = "this is ID";
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				Toast.makeText(getApplicationContext(), stringOut,
-						Toast.LENGTH_LONG).show();
-			}
-		});
+		// runOnUiThread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// Toast.makeText(getApplicationContext(), stringOut,
+		// Toast.LENGTH_LONG).show();
+		// }
+		// });
 
 		byte[] bytesOut = stringOut.getBytes();
 
 		NdefRecord ndefRecordOut = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
 				"text/plain".getBytes(), new byte[] {}, bytesOut);
+		NdefRecord[] ndefRecords = { ndefRecordOut };
 
-		NdefMessage ndefMessageout = new NdefMessage(ndefRecordOut);
+		NdefMessage ndefMessageout = new NdefMessage(ndefRecords);
 
 		Log.d("osama", ndefMessageout.toString());
 		return ndefMessageout;
@@ -422,8 +426,6 @@ public class Post extends ListActivity implements
 				}
 			} else {
 				Log.e("osama", "myPlacesData was null!!");
-				Toast.makeText(getApplicationContext(),
-						"myPlacesData was null!!", Toast.LENGTH_SHORT).show();
 			}
 		} else {
 			try {
@@ -466,24 +468,19 @@ public class Post extends ListActivity implements
 	}
 
 	private void prepareNFC() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		boolean nfcEnabled = sharedPreferences.getBoolean("NFC", true);
 
-		if (nfcEnabled) {
-			nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-			if (nfcAdapter == null) {
-				// TODO: try to enable NFC!!
+		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (nfcAdapter == null) {
+			// TODO: try to enable NFC!!
 
-				Toast.makeText(getApplicationContext(), "please enable NFC!",
-						Toast.LENGTH_LONG).show();
-			} else {
-				nfcAdapter.setNdefPushMessageCallback(this, this);
-				nfcAdapter.setOnNdefPushCompleteCallback(this, this);
+			Toast.makeText(getApplicationContext(), "please enable NFC!",
+					Toast.LENGTH_LONG).show();
+		} else {
+			nfcAdapter.setNdefPushMessageCallback(this, this);
+			nfcAdapter.setOnNdefPushCompleteCallback(this, this);
 
-				Toast.makeText(getApplicationContext(), "NFC adapter is ready",
-						Toast.LENGTH_LONG).show();
-			}
+			Toast.makeText(getApplicationContext(),
+					"use NFC to tag your friend", Toast.LENGTH_LONG).show();
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.osama.shake_in;
+package test;
 
 import java.util.Arrays;
 
@@ -21,6 +21,9 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.OpenGraphAction;
 import com.facebook.model.OpenGraphObject;
+import com.osama.shake_in.R;
+import com.osama.shake_in.R.id;
+import com.osama.shake_in.R.layout;
 
 /**
  * 
