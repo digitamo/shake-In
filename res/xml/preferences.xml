@@ -43,11 +43,6 @@
         android:title="@string/GPSWaning" />
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="NFC"
-        android:summary="@string/NFC_summary"
-        android:title="@string/enable_NFC" />
-    <CheckBoxPreference
-        android:defaultValue="true"
         android:key="auto_login"
         android:summary="@string/auto_login_desc"
         android:title="@string/auto_login" />

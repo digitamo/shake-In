@@ -4,7 +4,7 @@
     android:versionName="1.1" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="7"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.NFC" />
 
     <uses-feature android:name="android.hardware.sensor.accelerometer" />
 
@@ -31,14 +30,7 @@
         <activity
             android:name="com.osama.shake_in.Post"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog" >
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
             android:name="com.osama.shake_in.Settings"

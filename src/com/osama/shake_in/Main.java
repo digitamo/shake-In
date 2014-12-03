@@ -1,7 +1,6 @@
 package com.osama.shake_in;
 
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -9,14 +8,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -27,7 +21,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -76,8 +69,6 @@ public class Main extends Activity {
 		uiHelper = new UiLifecycleHelper(this, callBack);
 		uiHelper.onCreate(savedInstanceState);
 
-		ActionBar actionbar = getActionBar();
-		actionbar.hide();
 
 		profilePic = (ImageView) findViewById(R.id.profilePic);
 		login = (ImageView) findViewById(R.id.login);
