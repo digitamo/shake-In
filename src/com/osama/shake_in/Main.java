@@ -98,7 +98,7 @@ public class Main extends Activity {
 			Log.d("osama", "auto login = true");
 		}
 
-		getHasKey();
+		// getHasKey();
 
 		if (serviceEnabled()) {
 			startService(new Intent(Main.this, Listener.class));
@@ -388,22 +388,22 @@ public class Main extends Activity {
 	// startActivity(intent);
 	// }
 
-	void getHasKey() { // Get Has Key
-		try {
-			PackageInfo info = getPackageManager().getPackageInfo(
-					"com.osama.shake_in", PackageManager.GET_SIGNATURES);
-			for (Signature signature : info.signatures) {
-				MessageDigest md = MessageDigest.getInstance("SHA");
-				md.update(signature.toByteArray());
-				Log.e("KeyHash:",
-						Base64.encodeToString(md.digest(), Base64.DEFAULT));
-			}
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	// void getHasKey() { // Get Has Key
+	// try {
+	// PackageInfo info = getPackageManager().getPackageInfo(
+	// "com.osama.shake_in", PackageManager.GET_SIGNATURES);
+	// for (Signature signature : info.signatures) {
+	// MessageDigest md = MessageDigest.getInstance("SHA");
+	// md.update(signature.toByteArray());
+	// Log.e("KeyHash:",
+	// Base64.encodeToString(md.digest(), Base64.DEFAULT));
+	// }
+	// } catch (NameNotFoundException e) {
+	// e.printStackTrace();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	/*
 	 * @Override public void onBackPressed() { int count =
