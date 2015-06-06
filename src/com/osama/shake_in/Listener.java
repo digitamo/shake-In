@@ -13,7 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.util.Log;
 //import android.os.Handler;
 //import android.os.HandlerThread;
@@ -79,8 +78,13 @@ public class Listener extends Service implements SensorEventListener {
 		// mSettingsContentObserver);
 		// =========================================================================
 
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		// SharedPreferences sharedPreferences = PreferenceManager
+		// .getDefaultSharedPreferences(this);
+
+		SharedPreferences sharedPreferences = getApplicationContext()
+				.getSharedPreferences(
+						getApplicationContext().getPackageName()
+								+ "_preferences", Context.MODE_PRIVATE | 0x4); // Context.MODE_MULTI_PROCESS
 
 		shakeThreshold = sharedPreferences.getInt("sensitivity",
 				DEFAULT_SHAKE_THRESHOLD) + MIN;
@@ -190,7 +194,7 @@ public class Listener extends Service implements SensorEventListener {
 				.setLargeIcon(
 						BitmapFactory.decodeResource(getResources(),
 								R.drawable.shake_in)).setAutoCancel(true)
-				.setProgress(MAX  - MIN, shakeThreshold - MIN, false).build();
+				.setProgress(MAX - MIN, shakeThreshold - MIN, false).build();
 
 		// notification.setLatestEventInfo(this, "shake-in",
 		// "I'm ready just shake-in", pendingIntent);
